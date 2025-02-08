@@ -1,0 +1,101 @@
+//
+//  homePage.swift
+//  My Own Mediaplayer
+//
+//  Created by Toon van der Have on 10/02/2025.
+//
+
+import SwiftUI
+import SwiftData
+import AVKit
+
+struct homePage: View {
+    @Environment(\.modelContext) private var modelContext
+    @Query private var users: [user]
+    @Query private var albums: [album]
+    
+    // Define a grid layout with two columns
+    let columns = [
+        GridItem(.flexible()),
+        GridItem(.flexible())
+    ]
+    
+    var body: some View {
+        ZStack {
+            if users.isEmpty {
+                ContentView()
+            } else {
+                NavigationView {
+                    
+                    List {
+                        // Top navigation links
+                        NavigationLink {
+                            SongListView()
+                        } label: {
+                            HStack {
+                                Image(systemName: "music.note").foregroundColor(Color.green)
+                                Text("Songs")
+                            }
+                        }
+                        
+                        NavigationLink {
+                            albumListView()
+                        } label: {
+                            HStack {
+                                Image(systemName: "rectangle.stack").foregroundColor(Color.green)
+                                Text("Albums")
+                            }
+                        }
+                        
+#if os(iOS)
+                        // Section for grid
+                        Section(header: Text("Recently added")
+                            .font(.system(size: 36))
+                            .fontWeight(.bold)
+                            .foregroundColor(Color.black)
+                            .listRowSeparator(.hidden))
+                        {
+                            albumLastAddedHorizontal(albums: albums, currentUser: users[0])
+                            
+                        }
+                        .listRowSeparator(.hidden)
+#endif
+                    }
+                    .navigationTitle("Home")
+                    .toolbar {
+                        ToolbarItem{
+                            AirPlayButton()
+                                .frame(width: 50, height: 50)
+                        }
+                        ToolbarItem {
+                            Button(action: logOut) {
+                                Label("Log Out", systemImage: "rectangle.portrait.and.arrow.right")
+                            }
+                        }
+                        
+                    }
+                }
+                
+            }
+        }
+        .listStyle(.inset)
+        .accentColor(.green)
+        .overlay(
+            BottomPlayerView(),
+            alignment: .bottom
+        )
+    }
+
+    
+    func logOut() {
+        for thisUser in users {
+            modelContext.delete(thisUser)
+        }
+    }
+}
+
+#Preview {
+    homePage()
+        .modelContainer(for: user.self, inMemory: true)
+}
+

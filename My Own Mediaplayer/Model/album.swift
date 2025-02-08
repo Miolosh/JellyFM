@@ -1,0 +1,32 @@
+//
+//  album.swift
+//  My Own Mediaplayer
+//
+//  Created by Toon van der Have on 13/02/2025.
+//
+
+import Foundation
+import SwiftData
+
+@Model
+final class album {
+    
+    @Attribute(.unique) var id: String
+    var title: String
+    var artist: [String]
+    var albumId: String
+    var albumArtist: String?
+    var dateCreated: Date
+    
+    init(id: String, title: String, artist: [String], albumid: String, albumArtist: String?, dateCreated: Date) {
+        self.id = id
+        self.title = title
+        self.artist = artist
+        self.albumId = albumid
+        self.albumArtist = albumArtist
+        self.dateCreated = dateCreated
+    }
+
+}
+
+
