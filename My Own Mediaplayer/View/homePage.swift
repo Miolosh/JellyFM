@@ -14,6 +14,8 @@ struct homePage: View {
     @Query private var users: [user]
     @Query private var albums: [album]
     
+    @State var showSettings: Bool = false
+    
     // Define a grid layout with two columns
     let columns = [
         GridItem(.flexible()),
@@ -68,12 +70,14 @@ struct homePage: View {
                                 .frame(width: 50, height: 50)
                         }
                         ToolbarItem {
-                            Button(action: logOut) {
-                                Label("Log Out", systemImage: "rectangle.portrait.and.arrow.right")
+                            Button(action: toggleSettings) {
+                                Label("Settings", systemImage: "gear")
                             }
                         }
                         
                     }
+                }.sheet(isPresented: $showSettings){
+                    settingsView()
                 }
                 
             }
@@ -86,12 +90,11 @@ struct homePage: View {
         )
     }
 
-    
-    func logOut() {
-        for thisUser in users {
-            modelContext.delete(thisUser)
-        }
+    func toggleSettings(){
+        showSettings.toggle()
     }
+    
+    
 }
 
 #Preview {

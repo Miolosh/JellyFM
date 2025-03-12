@@ -165,7 +165,7 @@ class MusicPlayer: ObservableObject {
 
     func updateNowPlayingInfo() {
         
-        
+        print(getStreamedDataSize(player: player))
         //Check if currentsong == currentQueuePosition. Important for automatic move forward of songs if previous song ended.
         var i = 0
         let maxValueI = 300
@@ -367,11 +367,27 @@ class MusicPlayer: ObservableObject {
     }
     
     func createUrl(songId: String, currentUser: user) -> URL?{
+        let MaxStreamingBitsize = readKbpsStream() * 1000
+        print(MaxStreamingBitsize)
         return URL(string:
-                    "\(currentUser.serverIP)/Audio/\(songId)/universal?UserId=\(currentUser.userId)&DeviceId=\(currentUser.deviceID)&MaxStreamingBitrate=320000&Container=ts%7Cmp3%2Cmp3%2Caac%2Cm4a%7Caac%2Cm4b%7Caac%2Cflac%2Calac%2Cm4a%7Calac%2Cm4b%7Calac%2Cwebma%2Cwebm%7Cwebma%2Cwav%2Cmp4%7Copus&TranscodingContainer=mp4&TranscodingProtocol=hls&AudioCodec=aac&api_key=\(currentUser.token)&StartTimeTicks=0&EnableRedirection=true&EnableRemoteMedia=false&EnableAudioVbrEncoding=true")
+                    "\(currentUser.serverIP)/Audio/\(songId)/universal?UserId=\(currentUser.userId)&DeviceId=\(currentUser.deviceID)&MaxStreamingBitrate=\(MaxStreamingBitsize)&Container=ts%7Cmp3%2Cmp3%2Caac%2Cm4a%7Caac%2Cm4b%7Caac%2Cflac%2Calac%2Cm4a%7Calac%2Cm4b%7Calac%2Cwebma%2Cwebm%7Cwebma%2Cwav%2Cmp4%7Copus&TranscodingContainer=mp4&TranscodingProtocol=hls&AudioCodec=aac&api_key=\(currentUser.token)&StartTimeTicks=0&EnableRedirection=true&EnableRemoteMedia=false&EnableAudioVbrEncoding=true")
     }
     
     func albumArtUrl(listedSong: song, size:Int) ->URL?{
         return URL(string:"\(activeUser?.serverIP ?? "")/Items/\(listedSong.albumId)/Images/Primary?fillHeight=\(size)&fillWidth=\(size)&quality=96&tag=726197babb87ba7515d495fad56d81ed")
+    }
+    
+    func readKbpsStream() -> Int{
+        var streamCount = UserDefaults.standard.integer(forKey: "streamSpeed")
+        // Returns 0 if the key does not exist
+        if streamCount == 0{
+            streamCount = 320000
+            changeKbpsStream(amount: streamCount)
+        }
+        return streamCount/1000
+    }
+    
+    func changeKbpsStream(amount: Int){
+        UserDefaults.standard.set(amount, forKey: "streamSpeed")
     }
 }
