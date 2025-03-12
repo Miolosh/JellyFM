@@ -13,14 +13,14 @@ final class jellyfinItem {
     
     @Attribute(.unique) var id: String
     var title: String
-    var artist: [String]
+    var artist: [String]?
     var albumId: String
     var albumArtist: String?
     var indexNumber: Int?
     var dateCreated: Date
     var parentIndexNumber: Int
     
-    init(id: String, title: String, artist: [String], albumid: String, albumArtist: String?, indexNumber: Int? = nil, dateCreated: String, parentIndexNumber: Int) {
+    init(id: String, title: String, artist: [String]?, albumid: String, albumArtist: String?, indexNumber: Int? = nil, dateCreated: String, parentIndexNumber: Int) {
         self.id = id
         self.title = title
         self.artist = artist
@@ -57,7 +57,7 @@ struct itemsResponse: Codable {
 struct APISong: Codable{
     let Id: String
     let Title: String
-    let Artists: [String]
+    let Artists: [String]?
     let albumId: String?
     let albumArtist: String?
     let indexNumber: Int?

@@ -150,7 +150,7 @@ struct SongListView: View {
     
     func increaseSongsInModel() {
         let allSongs = songList.songs.map { thisItem in
-            song(id: thisItem.id, title: thisItem.title, artist: thisItem.artist, albumid: thisItem.albumId, indexNumber: thisItem.indexNumber, dateCreated: thisItem.dateCreated, discNumber: thisItem.parentIndexNumber)
+            song(id: thisItem.id, title: thisItem.title, artist: thisItem.artist ?? [], albumid: thisItem.albumId, indexNumber: thisItem.indexNumber, dateCreated: thisItem.dateCreated, discNumber: thisItem.parentIndexNumber)
         }
         allSongs.forEach { modelContext.insert($0) }
     }

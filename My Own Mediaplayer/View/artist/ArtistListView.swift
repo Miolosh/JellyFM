@@ -8,10 +8,10 @@
 import SwiftUI
 import SwiftData
 
-struct albumListView: View {
+struct artistListView: View {
     
     @Environment(\.modelContext) private var modelContext
-    @Query private var albums: [album]
+    @Query private var artists: [artist]
     @Query private var users: [user]
     
     @StateObject private var songList:ItemAPI
@@ -20,36 +20,33 @@ struct albumListView: View {
     
     // UserDefaults Keys
     enum UserDefaultsKeys {
-        static let sortingOption = "sortingOption"
-        static let ascendingOrder = "ascendingOrder"
+        static let sortingOptionArtist = "sortingOptionArtist"
+        static let ascendingOrderArtist = "ascendingOrderArtist"
     }
     
     // Sorting Options
     enum SortingOption: String, CaseIterable, Identifiable {
         case titleAscending = "Title"
-        case artistAscending = "Artist"
-        case dateCreated = "Date created"
+        //case artistAscending = "Artist"
         
         var id: String { self.rawValue }
     }
     
     // Load initial values from UserDefaults
     @State private var sortingOption: SortingOption = SortingOption(
-        rawValue: UserDefaults.standard.string(forKey: UserDefaultsKeys.sortingOption) ?? SortingOption.titleAscending.rawValue
+        rawValue: UserDefaults.standard.string(forKey: UserDefaultsKeys.sortingOptionArtist) ?? SortingOption.titleAscending.rawValue
     ) ?? .titleAscending
     
-    @State private var ascendingOrder: Bool = UserDefaults.standard.bool(forKey: UserDefaultsKeys.ascendingOrder)
+    @State private var ascendingOrder: Bool = UserDefaults.standard.bool(forKey: UserDefaultsKeys.ascendingOrderArtist)
     
     // Sorting Logic
-    var sortedAlbums: [album] {
-        let sorted: [album]
+    var sortedArtists: [artist] {
+        let sorted: [artist]
         switch sortingOption {
         case .titleAscending:
-            sorted = albums.sorted { $0.title.lowercased() < $1.title.lowercased() }
-        case .artistAscending:
-            sorted = albums.sorted { $0.artist[0].lowercased() < $1.artist[0].lowercased() }
-        case .dateCreated:
-            sorted = albums.sorted { $0.dateCreated < $1.dateCreated }
+            sorted = artists.sorted { $0.title.lowercased() < $1.title.lowercased() }
+        /*case .artistAscending:
+            sorted = artists.sorted { $0.artistName[0].lowercased() < $1.artistName[0].lowercased() }*/
         }
         return ascendingOrder ? sorted : sorted.reversed()
     }
@@ -62,17 +59,17 @@ struct albumListView: View {
         
         VStack(alignment: .leading){
             List {
-                ForEach(sortedAlbums) { item in
-                    albumView(listedAlbum: item, newUser: users[0])
+                ForEach(sortedArtists) { item in
+                    artistView(listedArtist: item, newUser: users[0])
                     }
-            }.navigationTitle("Albums")
+            }.navigationTitle("Artists")
                 .listStyle(.inset)
 #if os(iOS)
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button {
                             ascendingOrder.toggle()
-                            UserDefaults.standard.set(ascendingOrder, forKey: UserDefaultsKeys.ascendingOrder)
+                            UserDefaults.standard.set(ascendingOrder, forKey: UserDefaultsKeys.ascendingOrderArtist)
                         } label: {
                             Label("Sort", systemImage: ascendingOrder ? "arrow.up" : "arrow.down")
                         }
@@ -82,7 +79,7 @@ struct albumListView: View {
                             ForEach(SortingOption.allCases) { option in
                                 Button(action: {
                                     sortingOption = option
-                                    UserDefaults.standard.set(option.rawValue, forKey: UserDefaultsKeys.sortingOption)
+                                    UserDefaults.standard.set(option.rawValue, forKey: UserDefaultsKeys.sortingOptionArtist)
                                 }) {
                                     HStack {
                                         Text(option.rawValue)
@@ -100,7 +97,7 @@ struct albumListView: View {
 #endif
         }
         .refreshable {
-            resetAlbums(initial: true)
+            resetArtists(initial: true)
         }
         .onReceive(songList.$lastUpdated){newState in
             //if statement was added to prevent a deletion of all items in model.
@@ -108,10 +105,10 @@ struct albumListView: View {
             if songlistNeedReload{
                 
                 if(songList.currentPosition <= songList.amountOfLoadsAtSameTime){
-                    loadAlbumsInModel(deletion: true)
-                    resetAlbums(initial: false)
+                    loadArtistsInModel(deletion: true)
+                    resetArtists(initial: false)
                 }else{
-                    loadAlbumsInModel(deletion: false)
+                    loadArtistsInModel(deletion: false)
                 }
             }
             self.songlistNeedReload = true
@@ -119,40 +116,40 @@ struct albumListView: View {
         }
         .onReceive(songList.$lastIncrement){newSong in //lastIncrement is used since this is only updated if a load has occured and is not reset.
             if (songList.currentPosition != 0){
-                loadAlbumsInModel(deletion: false)
-                resetAlbums(initial: false)
+                loadArtistsInModel(deletion: false)
+                resetArtists(initial: false)
             }
             
         }
     }
     
-    func resetAlbums(initial: Bool){
+    func resetArtists(initial: Bool){
         if initial{
-            songList.checkSongs(searchType: "MusicAlbum", user: users[0])
+            songList.checkSongs(searchType: "MusicArtist", user: users[0])
         }else{
-            songList.increaseLoadedSongs(searchType: "MusicAlbum", user: users[0])
+            songList.increaseLoadedSongs(searchType: "MusicArtist", user: users[0])
         }
     }
     
     //is called when lastupdated changed
-    func loadAlbumsInModel(deletion: Bool){
+    func loadArtistsInModel(deletion: Bool){
         if deletion{
             deleteSongs()
         }
-        increaseAlbumsInModel()
+        increaseArtistsInModel()
     }
     
     //is called when a second loop has been gone through
-    func increaseAlbumsInModel(){
+    func increaseArtistsInModel(){
         var jellyFinItems = songList.songs
-        var allSongs = [album]()
+        var allArtists = [artist]()
         
         for thisItem in jellyFinItems{
-            allSongs.append(album(id: thisItem.id, title: thisItem.title, artist: thisItem.artist ?? [], albumid: thisItem.albumId, albumArtist: thisItem.albumArtist, dateCreated: thisItem.dateCreated))
+            allArtists.append(artist(id: thisItem.id, title: thisItem.title, artist: thisItem.artist))
 
         }
         
-        for refreshedSong in allSongs{
+        for refreshedSong in allArtists{
             print(refreshedSong.title)
             modelContext.insert(refreshedSong)
         }
@@ -160,8 +157,8 @@ struct albumListView: View {
     }
     
     func deleteSongs(){
-        for thisAlbum in albums{
-            modelContext.delete(thisAlbum)
+        for thisArtist in artists{
+            modelContext.delete(thisArtist)
         }
      
     }

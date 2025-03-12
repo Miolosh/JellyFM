@@ -48,6 +48,14 @@ struct homePage: View {
                                 Text("Albums")
                             }
                         }
+                        NavigationLink {
+                            artistListView()
+                        } label: {
+                            HStack {
+                                Image(systemName: "rectangle.stack").foregroundColor(Color.green)
+                                Text("Artists")
+                            }
+                        }
                         
 #if os(iOS)
                         // Section for grid
