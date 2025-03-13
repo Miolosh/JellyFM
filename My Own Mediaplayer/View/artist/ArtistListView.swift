@@ -127,7 +127,7 @@ struct artistListView: View {
         if initial{
             songList.checkSongs(searchType: "artist", user: users[0])
         }else{
-            songList.increaseLoadedSongs(searchType: "artist", user: users[0])
+            songList.increaseArtists(user: users[0])
         }
     }
     

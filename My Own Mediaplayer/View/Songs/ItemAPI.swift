@@ -29,7 +29,6 @@ class ItemAPI: ObservableObject{
         }else{
             increaseLoadedSongs(searchType: searchType, user: user)
         }
-        self.lastUpdated = Date()
     }
     
     public func increaseLoadedSongs(searchType: String, user: user){
@@ -59,9 +58,15 @@ class ItemAPI: ObservableObject{
                         tempSongs.append(newSong ?? jellyfinItem(id: "", title: "", artist: [""], albumid: "", albumArtist: "", indexNumber: currentSong.indexNumber, dateCreated: "2019-08-24T14:15:22Z", parentIndexNumber: 1))
                     }
                     
+                    
+                    print(self.currentPosition)
                     self.currentPosition = self.currentPosition + self.amountOfLoadsAtSameTime
                     self.songs = tempSongs
-                    self.lastIncrement = Date()
+                    if(self.currentPosition == self.amountOfLoadsAtSameTime){
+                        self.lastUpdated = Date()
+                    }else{
+                        self.lastIncrement = Date()
+                    }
                     break
                     
                 case .failure(let error):
@@ -116,9 +121,14 @@ class ItemAPI: ObservableObject{
                         tempSongs.append(newItem ?? jellyFinArtist(id: "", name: ""))
                     }
                     
+                    
                     self.currentPosition = self.currentPosition + self.amountOfLoadsAtSameTime
                     self.artists = tempSongs
-                    self.lastIncrement = Date()
+                    if(self.currentPosition == self.amountOfLoadsAtSameTime){
+                        self.lastUpdated = Date()
+                    }else{
+                        self.lastIncrement = Date()
+                    }
                     break
                     
                 case .failure(let error):

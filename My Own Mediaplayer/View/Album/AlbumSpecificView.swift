@@ -90,12 +90,15 @@ struct AlbumSpecificView: View {
                     .tint(.green)
                 }
             }
-            VStack{
+            HStack{
+                Spacer()
                 Image("InAppIcon")
                         .resizable()
                         .frame(width: 100, height: 100)
+                Spacer()
             }
             .frame(height: 150)
+            .listRowSeparator(.hidden)
         }
         .foregroundColor(Color.black)
         .listStyle(.inset)

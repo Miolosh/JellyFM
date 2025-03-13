@@ -52,7 +52,7 @@ struct homePage: View {
                             artistListView()
                         } label: {
                             HStack {
-                                Image(systemName: "rectangle.stack").foregroundColor(Color.green)
+                                Image(systemName: "music.microphone").foregroundColor(Color.green)
                                 Text("Artists")
                             }
                         }
@@ -75,7 +75,6 @@ struct homePage: View {
                     .toolbar {
                         ToolbarItem{
                             AirPlayButton()
-                                .frame(width: 50, height: 50)
                         }
                         ToolbarItem {
                             Button(action: toggleSettings) {
