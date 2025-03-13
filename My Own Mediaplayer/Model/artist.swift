@@ -12,13 +12,11 @@ import SwiftData
 final class artist {
     
     @Attribute(.unique) var id: String
-    var title: String
-    var artistName: [String]?
+    var name: String
     
-    init(id: String, title: String, artist: [String]?) {
+    init(id: String, name: String) {
         self.id = id
-        self.title = title
-        self.artistName = artist
+        self.name = name
     }
 
 }

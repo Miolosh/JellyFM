@@ -84,6 +84,11 @@ struct homePage: View {
                         }
                         
                     }
+                    .onAppear(){
+                        if MusicPlayer.shared.activeUser == nil{
+                            MusicPlayer.shared.activeUser = users[0]
+                        }
+                    }
                 }.sheet(isPresented: $showSettings){
                     settingsView()
                 }

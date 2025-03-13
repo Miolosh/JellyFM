@@ -42,7 +42,14 @@ struct ContentView: View {
             VStack(){
                 VStack(spacing: 15) {
                     Spacer()
-                    Text("Toons Media Player")
+                    
+                    Image("InAppIcon")
+                            .resizable()
+                            .frame(width: 100, height: 100)
+                            .clipShape(RoundedRectangle(cornerRadius: 15))
+                    
+                    
+                    Text("JellyFM")
                         .font(.largeTitle).foregroundColor(Color.white)
                         .shadow(radius: 10.0, x: 20, y: 10)
                         .multilineTextAlignment(.center)

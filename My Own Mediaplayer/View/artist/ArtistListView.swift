@@ -26,7 +26,7 @@ struct artistListView: View {
     
     // Sorting Options
     enum SortingOption: String, CaseIterable, Identifiable {
-        case titleAscending = "Title"
+        case nameAscending = "Name"
         //case artistAscending = "Artist"
         
         var id: String { self.rawValue }
@@ -34,8 +34,8 @@ struct artistListView: View {
     
     // Load initial values from UserDefaults
     @State private var sortingOption: SortingOption = SortingOption(
-        rawValue: UserDefaults.standard.string(forKey: UserDefaultsKeys.sortingOptionArtist) ?? SortingOption.titleAscending.rawValue
-    ) ?? .titleAscending
+        rawValue: UserDefaults.standard.string(forKey: UserDefaultsKeys.sortingOptionArtist) ?? SortingOption.nameAscending.rawValue
+    ) ?? .nameAscending
     
     @State private var ascendingOrder: Bool = UserDefaults.standard.bool(forKey: UserDefaultsKeys.ascendingOrderArtist)
     
@@ -43,8 +43,8 @@ struct artistListView: View {
     var sortedArtists: [artist] {
         let sorted: [artist]
         switch sortingOption {
-        case .titleAscending:
-            sorted = artists.sorted { $0.title.lowercased() < $1.title.lowercased() }
+        case .nameAscending:
+            sorted = artists.sorted { $0.name.lowercased() < $1.name.lowercased() }
         /*case .artistAscending:
             sorted = artists.sorted { $0.artistName[0].lowercased() < $1.artistName[0].lowercased() }*/
         }
@@ -125,9 +125,9 @@ struct artistListView: View {
     
     func resetArtists(initial: Bool){
         if initial{
-            songList.checkSongs(searchType: "MusicArtist", user: users[0])
+            songList.checkSongs(searchType: "artist", user: users[0])
         }else{
-            songList.increaseLoadedSongs(searchType: "MusicArtist", user: users[0])
+            songList.increaseLoadedSongs(searchType: "artist", user: users[0])
         }
     }
     
@@ -141,16 +141,15 @@ struct artistListView: View {
     
     //is called when a second loop has been gone through
     func increaseArtistsInModel(){
-        var jellyFinItems = songList.songs
+        let jellyFinItems = songList.artists
         var allArtists = [artist]()
         
         for thisItem in jellyFinItems{
-            allArtists.append(artist(id: thisItem.id, title: thisItem.title, artist: thisItem.artist))
+            allArtists.append(artist(id: thisItem.id, name: thisItem.name))
 
         }
         
         for refreshedSong in allArtists{
-            print(refreshedSong.title)
             modelContext.insert(refreshedSong)
         }
         

@@ -91,7 +91,9 @@ struct AlbumSpecificView: View {
                 }
             }
             VStack{
-                
+                Image("InAppIcon")
+                        .resizable()
+                        .frame(width: 100, height: 100)
             }
             .frame(height: 150)
         }

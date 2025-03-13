@@ -35,7 +35,9 @@ struct albumView: View {
                     image.resizable()
                         .aspectRatio(contentMode: .fit)
                 } placeholder: {
-                    ProgressView()
+                    Image("InAppIcon")
+                            .resizable()
+                            .frame(width: 64, height: 64)
                 }
                 .cornerRadius(5)
                 .frame(width: 48, height: 48)
