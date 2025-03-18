@@ -10,29 +10,25 @@ import SwiftData
 
 struct artistSpecificView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query private var songs: [song]
+    @Query private var albums: [album]
     @Query private var users: [user]
     
+    var selectedArtist: artist
     
-    var albumSongs: [song] {
+    var artistAlbums: [album] {
         
-        return songs
-            .filter { $0.albumId == selectedAlbum.id }
-            .sorted {
-                if $0.discNumber == $1.discNumber {
-                    return $0.indexNumber ?? 0 < $1.indexNumber ?? 0
-                }
-                return $0.discNumber < $1.discNumber
-            }
+        return albums
+        //we choose name instead of id, because we believe it will always be the same for the same artist
+        //Id was not chosen, because we use the artists endpoint. This returns a different id then the items
+            .filter { $0.albumArtist == selectedArtist.name }
         
     }
     
-    var selectedAlbum: album
     
     var body: some View {
         List {
             ZStack{
-                AsyncImage(url: URL(string: "\(users[0].serverIP)/Items/\(selectedAlbum.id)/Images/Primary?fillHeight=480&fillWidth=480&quality=96&tag=726197babb87ba7515d495fad56d81ed")) { image in
+                AsyncImage(url: URL(string: "\(users[0].serverIP)/Items/\(selectedArtist.id)/Images/Primary?fillHeight=480&fillWidth=480&quality=96&tag=726197babb87ba7515d495fad56d81ed")) { image in
                     image
                         .resizable()
                         .aspectRatio(contentMode: .fill)
@@ -46,7 +42,7 @@ struct artistSpecificView: View {
                 
                 VStack(alignment: .center, spacing: 3) {
                     
-                    AsyncImage(url: URL(string: "\(users[0].serverIP)/Items/\(selectedAlbum.id)/Images/Primary?fillHeight=480&fillWidth=480&quality=96&tag=726197babb87ba7515d495fad56d81ed")) { image in
+                    AsyncImage(url: URL(string: "\(users[0].serverIP)/Items/\(selectedArtist.id)/Images/Primary?fillHeight=480&fillWidth=480&quality=96&tag=726197babb87ba7515d495fad56d81ed")) { image in
                         image.resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 240, height: 240)
@@ -56,18 +52,14 @@ struct artistSpecificView: View {
                     }
                     
                     VStack(alignment: .center, spacing: 3){
-                        Text(selectedAlbum.title)
+                        Text(selectedArtist.name)
                             .foregroundColor(Color.black)
                             .font(.system(size: 28, weight: .bold))
                             .padding(.top, 10)
                             .multilineTextAlignment(.center)
                             .frame(maxWidth: 300, alignment: .center)
-                            
                         
-                        
-                        Text(selectedAlbum.albumArtist ?? "")
-                            .font(.subheadline)
-                            .foregroundColor(Color.gray)
+                       // Text("\(selectedArtist.id)")
                     }
                 }
             }
@@ -75,20 +67,8 @@ struct artistSpecificView: View {
             .listRowSeparator(.hidden)
             .frame(maxWidth:.infinity)
             
-            ForEach(Array(albumSongs.enumerated()), id: \.element.id) { (index, item) in
-                Button(action: {
-                    MusicPlayer.shared.playSongAndQueue(queueNumber: index, currentUser: users[0], queueList: albumSongs)
-                }) {
-                    SongView(listedSong: item, newUser: users[0], withAlbumArt: false)
-                }
-                .swipeActions(edge: .leading, allowsFullSwipe: true) {
-                    Button {
-                        MusicPlayer.shared.addSongToQueue(songToPlay: item, currentUser: users[0])
-                    } label: {
-                        Label("Add to queue", systemImage: "music.note.list")
-                    }
-                    .tint(.green)
-                }
+            ForEach(Array(artistAlbums.enumerated()), id: \.element.id) { (index, item) in
+                albumView(listedAlbum: item, newUser: users[0])
             }
             VStack{
                 

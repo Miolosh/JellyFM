@@ -50,6 +50,7 @@ struct albumView: View {
                         .foregroundColor(Color.gray)
                     
                     
+                    
                 }
                 
             }

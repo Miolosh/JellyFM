@@ -11,10 +11,12 @@ import SwiftData
 struct SongView: View {
     
     @Environment(\.modelContext) private var modelContext
+    @Query private var albums: [album]
     var currentUser: user
     var listedSong: song
     var artists = ""
     var withAlbumArt: Bool = true
+    
     
     
     init(listedSong: song, artists: String = "", newUser: user, withAlbumArt: Bool = true) {
@@ -22,6 +24,7 @@ struct SongView: View {
         self.artists = artists
         self.currentUser = newUser
         self.withAlbumArt = withAlbumArt
+        
         
         var i = 1
         
@@ -74,4 +77,7 @@ struct SongView: View {
             
         }
     }
+    
+    
+    
 }

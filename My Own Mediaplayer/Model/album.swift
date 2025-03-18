@@ -16,15 +16,19 @@ final class album {
     var artist: [String]
     var albumId: String
     var albumArtist: String?
+    var albumArtistId: String?
     var dateCreated: Date
+    var parentId: String?
     
-    init(id: String, title: String, artist: [String], albumid: String, albumArtist: String?, dateCreated: Date) {
+    init(id: String, title: String, artist: [String], albumid: String, albumArtist: String?, dateCreated: Date, albumArtistId: String?, parentId: String? = nil) {
         self.id = id
         self.title = title
         self.artist = artist
         self.albumId = albumid
         self.albumArtist = albumArtist
         self.dateCreated = dateCreated
+        self.albumArtistId = albumArtistId
+        self.parentId = parentId
     }
 
 }

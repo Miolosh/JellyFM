@@ -19,8 +19,10 @@ final class jellyfinItem {
     var indexNumber: Int?
     var dateCreated: Date
     var parentIndexNumber: Int
+    var albumArtistId: String?
+    var parentId: String?
     
-    init(id: String, title: String, artist: [String]?, albumid: String, albumArtist: String?, indexNumber: Int? = nil, dateCreated: String, parentIndexNumber: Int) {
+    init(id: String, title: String, artist: [String]?, albumid: String, albumArtist: String?, indexNumber: Int? = nil, dateCreated: String, parentIndexNumber: Int, albumArtistId: String, parrentId: String) {
         self.id = id
         self.title = title
         self.artist = artist
@@ -33,7 +35,6 @@ final class jellyfinItem {
         // Set the date format
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
         
-        print(dateCreated)
         // Convert the string to a Date object
         if let newDate = dateFormatter.date(from: dateCreated) {
             self.dateCreated = newDate
@@ -41,7 +42,9 @@ final class jellyfinItem {
             self.dateCreated = Date.now
         }
         self.parentIndexNumber = parentIndexNumber
-        
+        self.albumArtistId = albumArtistId
+        self.parentId = parrentId
+        print("this parentId = \(parrentId)")
     }
     
 }
@@ -63,6 +66,8 @@ struct APISong: Codable{
     let indexNumber: Int?
     let dateCreated: String
     let ParentIndexNumber: Int?
+    let albumArtistObj: [albumArtist]
+    let parentId: String?
     
     enum CodingKeys: String, CodingKey {
         case Id = "Id"
@@ -73,6 +78,18 @@ struct APISong: Codable{
         case indexNumber = "IndexNumber"
         case dateCreated = "DateCreated"
         case ParentIndexNumber = "ParentIndexNumber"
+        case albumArtistObj = "AlbumArtists"
+        case parentId = "ParentId"
+    }
+}
+
+struct albumArtist: Codable{
+    let name: String
+    let id: String
+    
+    enum CodingKeys: String, CodingKey{
+        case name = "Name"
+        case id = "Id"
     }
 }
 

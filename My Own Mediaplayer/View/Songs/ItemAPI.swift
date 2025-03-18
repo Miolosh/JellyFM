@@ -15,7 +15,7 @@ class ItemAPI: ObservableObject{
     @Published var lastUpdated = Date() //indicates the whole reload has been started (first function)
     @Published var artists = [jellyFinArtist]()
     
-    let amountOfLoadsAtSameTime = 10
+    let amountOfLoadsAtSameTime = 50
     @Published var currentPosition = 0
     let sortBy = "Title"
     @Published var lastIncrement = Date() //indicate the increment (second function is used)
@@ -54,12 +54,12 @@ class ItemAPI: ObservableObject{
                         return
                     }
                     for currentSong in data.items {
-                        newSong = jellyfinItem(id: currentSong.Id, title: currentSong.Title, artist: currentSong.Artists, albumid: currentSong.albumId ?? "", albumArtist: currentSong.albumArtist ?? "", indexNumber: currentSong.indexNumber, dateCreated: currentSong.dateCreated, parentIndexNumber: currentSong.ParentIndexNumber ?? 1)
-                        tempSongs.append(newSong ?? jellyfinItem(id: "", title: "", artist: [""], albumid: "", albumArtist: "", indexNumber: currentSong.indexNumber, dateCreated: "2019-08-24T14:15:22Z", parentIndexNumber: 1))
+                        print(currentSong.parentId)
+                        newSong = jellyfinItem(id: currentSong.Id, title: currentSong.Title, artist: currentSong.Artists, albumid: currentSong.albumId ?? "", albumArtist: currentSong.albumArtist ?? "", indexNumber: currentSong.indexNumber, dateCreated: currentSong.dateCreated, parentIndexNumber: currentSong.ParentIndexNumber ?? 1, albumArtistId: currentSong.albumArtistObj[0].id ?? "", parrentId: currentSong.parentId ?? "")
+                        tempSongs.append(newSong ?? jellyfinItem(id: "", title: "", artist: [""], albumid: "", albumArtist: "", indexNumber: currentSong.indexNumber, dateCreated: "2019-08-24T14:15:22Z", parentIndexNumber: 1, albumArtistId: "", parrentId: "0"))
+                        print(newSong?.parentId)
                     }
                     
-                    
-                    print(self.currentPosition)
                     self.currentPosition = self.currentPosition + self.amountOfLoadsAtSameTime
                     self.songs = tempSongs
                     if(self.currentPosition == self.amountOfLoadsAtSameTime){

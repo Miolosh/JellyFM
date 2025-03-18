@@ -148,7 +148,7 @@ struct albumListView: View {
         var allSongs = [album]()
         
         for thisItem in jellyFinItems{
-            allSongs.append(album(id: thisItem.id, title: thisItem.title, artist: thisItem.artist ?? [], albumid: thisItem.albumId, albumArtist: thisItem.albumArtist, dateCreated: thisItem.dateCreated))
+            allSongs.append(album(id: thisItem.id, title: thisItem.title, artist: thisItem.artist ?? [], albumid: thisItem.albumId, albumArtist: thisItem.albumArtist, dateCreated: thisItem.dateCreated, albumArtistId: thisItem.albumArtistId, parentId: thisItem.parentId))
 
         }
         
