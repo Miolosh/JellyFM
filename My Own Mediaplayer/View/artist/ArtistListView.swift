@@ -62,6 +62,14 @@ struct artistListView: View {
                 ForEach(sortedArtists) { item in
                     artistView(listedArtist: item, newUser: users[0])
                     }
+                HStack{
+                    Spacer()
+                    Image("InAppIcon")
+                            .resizable()
+                            .frame(width: 100, height: 100)
+                    Spacer()
+                }
+                .listRowSeparator(.hidden)
             }.navigationTitle("Artists")
                 .listStyle(.inset)
 #if os(iOS)

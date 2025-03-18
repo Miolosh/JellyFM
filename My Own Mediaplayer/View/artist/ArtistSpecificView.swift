@@ -70,10 +70,13 @@ struct artistSpecificView: View {
             ForEach(Array(artistAlbums.enumerated()), id: \.element.id) { (index, item) in
                 albumView(listedAlbum: item, newUser: users[0])
             }
-            VStack{
-                
+            HStack{
+                Spacer()
+                Image("InAppIcon")
+                        .resizable()
+                        .frame(width: 100, height: 100)
+                Spacer()
             }
-            .frame(height: 150)
         }
         .foregroundColor(Color.black)
         .listStyle(.inset)

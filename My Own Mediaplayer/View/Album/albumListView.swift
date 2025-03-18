@@ -65,6 +65,14 @@ struct albumListView: View {
                 ForEach(sortedAlbums) { item in
                     albumView(listedAlbum: item, newUser: users[0])
                     }
+                HStack{
+                    Spacer()
+                    Image("InAppIcon")
+                            .resizable()
+                            .frame(width: 100, height: 100)
+                    Spacer()
+                }
+                .listRowSeparator(.hidden)
             }.navigationTitle("Albums")
                 .listStyle(.inset)
 #if os(iOS)
