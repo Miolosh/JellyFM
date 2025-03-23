@@ -24,11 +24,13 @@ class MusicPlayer: ObservableObject {
     var timeObserverToken: Any?
     var currentUrl: String?
     var currentTitle: String?
+    var originalQueueWithoutShuffle: [song] = []
     
     @Published var queueOfSongs: [song] = []
     @Published var currentArtistString: String = ""
     @Published var isPlaying: Bool = false
     @Published var isRepeatingSong: Bool = false
+    @Published var isShuffled: Bool = false
     
     var albums: [album]?
 
@@ -105,6 +107,62 @@ class MusicPlayer: ObservableObject {
         
         player.insert(playerItem, after: player.items().last)
         
+    }
+    
+    func shuffleQueue(){
+        if queueOfSongs.count == 0{
+            return print("Queue of songs is empty and cannot be shuffled")
+        }
+        
+        var songsToAddInQueue: [song] = []
+        var newQueueOfSongs: [song] = []
+        var currentTime = CMTime.zero
+        var currentSongIndex: Int = 0
+        
+        currentTime = player.currentTime()
+        
+        if !isShuffled{
+            let currentSong = queueOfSongs[currentQueuePosition]
+            var tempSongs = queueOfSongs
+            tempSongs.remove(at: currentQueuePosition)
+            tempSongs.shuffle()
+            originalQueueWithoutShuffle = queueOfSongs
+            newQueueOfSongs = []
+            /*var i = 0
+             
+             while songsToAddInQueue.count > 0{
+             i = Int.random(in: 1...songsToAddInQueue.count)
+             newQueueOfSongs.append(songsToAddInQueue[i - 1])
+             songsToAddInQueue.remove(at: i - 1)
+             }*/
+            songsToAddInQueue.append(currentSong)
+            songsToAddInQueue = songsToAddInQueue + tempSongs
+            isShuffled = true
+            
+        }else{
+            let currentSong = queueOfSongs[currentQueuePosition]
+            songsToAddInQueue = originalQueueWithoutShuffle
+            originalQueueWithoutShuffle = []
+            isShuffled = false
+            currentSongIndex = songsToAddInQueue.firstIndex(of: currentSong)!
+            
+        }
+        newQueueOfSongs = songsToAddInQueue
+        
+        queueOfSongs = []
+        player.removeAllItems()
+        
+        for newQueueOfSong in newQueueOfSongs {
+            addSongToQueue(songToPlay: newQueueOfSong, currentUser: activeUser!)
+        }
+        var i = 0
+        
+        while !isShuffled && i < currentSongIndex{
+            playNextTrack()
+            i += 1
+        }
+        
+        player.seek(to: currentTime)
     }
     
     

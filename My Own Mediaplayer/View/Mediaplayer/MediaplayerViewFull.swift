@@ -105,6 +105,15 @@ struct MediaplayerViewFull: View {
                     }
                     HStack{
                         Button(action: {
+                            musicPlayer.shuffleQueue()
+                        }) {
+                            Image(systemName: "shuffle")
+                                .resizable()
+                                .frame(width: 24, height: 24)
+                                .foregroundColor(musicPlayer.isShuffled ? .green : .black)
+                        }
+                        .padding()
+                        Button(action: {
                             musicPlayer.isRepeatingSong.toggle()
                         }) {
                             Image(systemName: "repeat.1")
