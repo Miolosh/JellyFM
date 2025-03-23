@@ -147,6 +147,7 @@ class MusicPlayer: ObservableObject {
         commandCenter.playCommand.addTarget { [unowned self] event in
             if player.rate == 0.0 {
                 player.play()
+                isPlaying = true
                 return .success
             }
             return .commandFailed
@@ -155,6 +156,7 @@ class MusicPlayer: ObservableObject {
         commandCenter.pauseCommand.addTarget { [unowned self] event in
             if player.rate == 1.0 {
                 player.pause()
+                isPlaying = false
                 return .success
             }
             return .commandFailed
@@ -209,8 +211,6 @@ class MusicPlayer: ObservableObject {
         var artist = ""
         var albumName = "Album not found"
         
-        
-        
         //make sure the user knows the mediaplayer is searching for the right info
         if maxValueI <= i{
             title = "Searching..."
@@ -220,7 +220,7 @@ class MusicPlayer: ObservableObject {
             title = queueOfSongs[currentQueuePosition].title
             artist = currentArtistString
             let albumId = queueOfSongs[currentQueuePosition].albumId
-            if let filteredAlbums = albums?.filter { $0.id == albumId}{
+            if let filteredAlbums = albums?.filter({$0.id == albumId}){
                 if filteredAlbums.count > 0{
                     albumName = filteredAlbums[0].title
                 }
