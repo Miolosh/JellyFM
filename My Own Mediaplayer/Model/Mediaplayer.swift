@@ -30,7 +30,7 @@ class MusicPlayer: ObservableObject {
     @Published var isPlaying: Bool = false
     @Published var isRepeatingSong: Bool = false
     
-    @Query private var albums: [album]
+    var albums: [album]?
 
     private init() {
         setupRemoteTransportControls()
@@ -40,8 +40,35 @@ class MusicPlayer: ObservableObject {
         #endif
     }
 
+    
+    //this function is called by views. It deletes the full queue and starts a new one. (clicking on a song)
+    func playSongAndQueue(queueNumber: Int, currentUser: user, queueList: [song], allAlbums: [album]){
+        MusicPlayer.shared.startNewQueue(songToPlay: queueList[queueNumber], currentUser: currentUser)
+        self.albums = allAlbums
+        if queueNumber + 1 >= queueList.count {
+            return
+        }
+        
+        for i in queueNumber + 1...queueList.count - 1{
+            MusicPlayer.shared.addSongToQueue(songToPlay: queueList[i], currentUser: currentUser)
+        }
+        
+        
+    }
+    
+    //This function is to be called by views; This adds a song to the existing queue.
+    func addSongToQueue(songToPlay: song, currentUser: user){
+        if player.items().count == 0{
+            startNewQueue(songToPlay: songToPlay, currentUser: currentUser)
+        }else{
+            addSingleSongToQueue(songToPlay: songToPlay, currentUser: currentUser)
+        }
+        
+        
+    }
+    
     //Function used to play one song
-    func startNewQueue(songToPlay: song, currentUser: user){
+    private func startNewQueue(songToPlay: song, currentUser: user){
         activeUser = currentUser
         player.removeAllItems()
         queueOfSongs = []
@@ -58,17 +85,8 @@ class MusicPlayer: ObservableObject {
         
     }
     
-    func addSongToQueue(songToPlay: song, currentUser: user){
-        if player.items().count == 0{
-            startNewQueue(songToPlay: songToPlay, currentUser: currentUser)
-        }else{
-            addSingleSongToQueue(songToPlay: songToPlay, currentUser: currentUser)
-        }
-        
-        
-    }
     
-    func addSingleSongToQueue(songToPlay: song, currentUser: user){
+    private func addSingleSongToQueue(songToPlay: song, currentUser: user){
         let songId = songToPlay.id
         
         //FLAC and wave are not included as containers to make sure the stream is encoded to MP3.
@@ -189,7 +207,7 @@ class MusicPlayer: ObservableObject {
         var nowPlayingInfo = [String: Any]()
         var title = ""
         var artist = ""
-        var albumName = ""
+        var albumName = "Album not found"
         
         
         
@@ -197,25 +215,22 @@ class MusicPlayer: ObservableObject {
         if maxValueI <= i{
             title = "Searching..."
             artist = "Searching..."
+            albumName = "Searching..."
         }else{
             title = queueOfSongs[currentQueuePosition].title
             print(currentQueuePosition)
             artist = currentArtistString
             let albumId = queueOfSongs[currentQueuePosition].albumId
-            print(queueOfSongs[currentQueuePosition])
-            let filteredAlbums = albums.filter { $0.id == albumId}
-            print(albumId)
-            print(albums)
-            if filteredAlbums.count > 0{
-                albumName = filteredAlbums[0].title
+            if let filteredAlbums = albums?.filter { $0.id == albumId}{
+                if filteredAlbums.count > 0{
+                    albumName = filteredAlbums[0].title
+                }
             }
             
         }
         
         currentTitle = title
         currentArtistString = artist
-
-
         
         nowPlayingInfo[MPMediaItemPropertyTitle] = title
         nowPlayingInfo[MPMediaItemPropertyArtist] = artist
@@ -357,19 +372,7 @@ class MusicPlayer: ObservableObject {
     }
     #endif
     
-    func playSongAndQueue(queueNumber: Int, currentUser: user, queueList: [song]){
-        MusicPlayer.shared.startNewQueue(songToPlay: queueList[queueNumber], currentUser: currentUser)
-        
-        if queueNumber + 1 >= queueList.count {
-            return
-        }
-        
-        for i in queueNumber + 1...queueList.count - 1{
-            MusicPlayer.shared.addSongToQueue(songToPlay: queueList[i], currentUser: currentUser)
-        }
-        
-        
-    }
+    
     
     func getCurrentSongUrl() -> URL?{
         if let currentItem = player.currentItem {

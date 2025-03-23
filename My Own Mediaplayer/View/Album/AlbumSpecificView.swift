@@ -12,6 +12,7 @@ struct AlbumSpecificView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var songs: [song]
     @Query private var users: [user]
+    @Query private var albums: [album]
     
     
     var albumSongs: [song] {
@@ -77,7 +78,7 @@ struct AlbumSpecificView: View {
             
             ForEach(Array(albumSongs.enumerated()), id: \.element.id) { (index, item) in
                 Button(action: {
-                    MusicPlayer.shared.playSongAndQueue(queueNumber: index, currentUser: users[0], queueList: albumSongs)
+                    MusicPlayer.shared.playSongAndQueue(queueNumber: index, currentUser: users[0], queueList: albumSongs, allAlbums: albums)
                 }) {
                     SongView(listedSong: item, newUser: users[0], withAlbumArt: false)
                 }

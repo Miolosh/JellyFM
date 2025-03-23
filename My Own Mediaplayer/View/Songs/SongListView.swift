@@ -14,6 +14,7 @@ struct SongListView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var songs: [song]
     @Query private var users: [user]
+    @Query private var albums: [album]
     
     @StateObject private var songList: ItemAPI
     
@@ -65,7 +66,7 @@ struct SongListView: View {
             List {
                 ForEach(Array(sortedSongs.enumerated()), id: \.element.id) { (index, item) in
                     Button(action: {
-                        MusicPlayer.shared.playSongAndQueue(queueNumber: index, currentUser: users[0], queueList: sortedSongs)
+                        MusicPlayer.shared.playSongAndQueue(queueNumber: index, currentUser: users[0], queueList: sortedSongs, allAlbums: albums)
                     }) {
                         SongView(listedSong: item, newUser: users[0])
                     }
