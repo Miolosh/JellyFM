@@ -12,6 +12,9 @@ import SwiftData
 //The musicplayer is not in the model, making it initiate each time
 //this is currently by design :)
 class MusicPlayer: ObservableObject {
+    
+    @Environment(\.modelContext) private var modelContext
+    
     static let shared = MusicPlayer()
     
     var player: AVQueuePlayer = AVQueuePlayer()
@@ -26,6 +29,8 @@ class MusicPlayer: ObservableObject {
     @Published var currentArtistString: String = ""
     @Published var isPlaying: Bool = false
     @Published var isRepeatingSong: Bool = false
+    
+    @Query private var albums: [album]
 
     private init() {
         setupRemoteTransportControls()
@@ -165,24 +170,28 @@ class MusicPlayer: ObservableObject {
 
     func updateNowPlayingInfo() {
         
-        print(getStreamedDataSize(player: player))
+        //print(getStreamedDataSize(player: player))
         //Check if currentsong == currentQueuePosition. Important for automatic move forward of songs if previous song ended.
         var i = 0
         let maxValueI = 300
-        while currentQueuePosition < queueOfSongs.count - 1 && !checkIfSame(currentSongUrl: createUrl(songId: queueOfSongs[currentQueuePosition].id, currentUser: activeUser!), newSongUrl: getCurrentSongUrl()) && i <= maxValueI{
+        while currentQueuePosition < queueOfSongs.count && !checkIfSame(currentSongUrl: createUrl(songId: queueOfSongs[currentQueuePosition].id, currentUser: activeUser!), newSongUrl: getCurrentSongUrl()) && i <= maxValueI{
             currentQueuePosition += 1
             createArtistString(currentSong: queueOfSongs[currentQueuePosition])
             i += 1
         }
         
         //safefail if currentposition would be behind the real song.
-        if currentQueuePosition >= queueOfSongs.count - 1{
+        if currentQueuePosition >= queueOfSongs.count{
             currentQueuePosition = 0
+            print(queueOfSongs.count)
         }
         
         var nowPlayingInfo = [String: Any]()
         var title = ""
         var artist = ""
+        var albumName = ""
+        
+        
         
         //make sure the user knows the mediaplayer is searching for the right info
         if maxValueI <= i{
@@ -190,7 +199,17 @@ class MusicPlayer: ObservableObject {
             artist = "Searching..."
         }else{
             title = queueOfSongs[currentQueuePosition].title
+            print(currentQueuePosition)
             artist = currentArtistString
+            let albumId = queueOfSongs[currentQueuePosition].albumId
+            print(queueOfSongs[currentQueuePosition])
+            let filteredAlbums = albums.filter { $0.id == albumId}
+            print(albumId)
+            print(albums)
+            if filteredAlbums.count > 0{
+                albumName = filteredAlbums[0].title
+            }
+            
         }
         
         currentTitle = title
@@ -200,7 +219,9 @@ class MusicPlayer: ObservableObject {
         
         nowPlayingInfo[MPMediaItemPropertyTitle] = title
         nowPlayingInfo[MPMediaItemPropertyArtist] = artist
-        let albumId = queueOfSongs[currentQueuePosition].albumId
+        
+        nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = albumName
+        print(albumName)
 
         let imageURL = albumArtUrl(listedSong: queueOfSongs[currentQueuePosition], size: 248)!
 #if os(iOS)
@@ -368,7 +389,7 @@ class MusicPlayer: ObservableObject {
     
     func createUrl(songId: String, currentUser: user) -> URL?{
         let MaxStreamingBitsize = readKbpsStream() * 1000
-        print(MaxStreamingBitsize)
+        //print(MaxStreamingBitsize)
         return URL(string:
                     "\(currentUser.serverIP)/Audio/\(songId)/universal?UserId=\(currentUser.userId)&DeviceId=\(currentUser.deviceID)&MaxStreamingBitrate=\(MaxStreamingBitsize)&Container=ts%7Cmp3%2Cmp3%2Caac%2Cm4a%7Caac%2Cm4b%7Caac%2Cflac%2Calac%2Cm4a%7Calac%2Cm4b%7Calac%2Cwebma%2Cwebm%7Cwebma%2Cwav%2Cmp4%7Copus&TranscodingContainer=mp4&TranscodingProtocol=hls&AudioCodec=aac&api_key=\(currentUser.token)&StartTimeTicks=0&EnableRedirection=true&EnableRemoteMedia=false&EnableAudioVbrEncoding=true")
     }
