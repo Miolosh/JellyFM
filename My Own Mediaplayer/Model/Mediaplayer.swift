@@ -86,7 +86,7 @@ class MusicPlayer: ObservableObject {
     }
     
     
-    private func addSingleSongToQueue(songToPlay: song, currentUser: user){
+    private func addSingleSongToQueue(songToPlay: song, currentUser: user, addQueueData: Bool = true){
         let songId = songToPlay.id
         
         //FLAC and wave are not included as containers to make sure the stream is encoded to MP3.
@@ -98,8 +98,9 @@ class MusicPlayer: ObservableObject {
         let playerItem = AVPlayerItem(url: url)
         
         
-        
-        queueOfSongs.append(songToPlay)
+        if addQueueData{
+            queueOfSongs.append(songToPlay)
+        }
         
         
         player.insert(playerItem, after: player.items().last)
@@ -192,7 +193,7 @@ class MusicPlayer: ObservableObject {
         //Check if currentsong == currentQueuePosition. Important for automatic move forward of songs if previous song ended.
         var i = 0
         let maxValueI = 300
-        while currentQueuePosition < queueOfSongs.count && !checkIfSame(currentSongUrl: createUrl(songId: queueOfSongs[currentQueuePosition].id, currentUser: activeUser!), newSongUrl: getCurrentSongUrl()) && i <= maxValueI{
+        while currentQueuePosition < queueOfSongs.count - 1 && !checkIfSame(currentSongUrl: createUrl(songId: queueOfSongs[currentQueuePosition].id, currentUser: activeUser!), newSongUrl: getCurrentSongUrl()) && i <= maxValueI{
             currentQueuePosition += 1
             createArtistString(currentSong: queueOfSongs[currentQueuePosition])
             i += 1
@@ -201,7 +202,6 @@ class MusicPlayer: ObservableObject {
         //safefail if currentposition would be behind the real song.
         if currentQueuePosition >= queueOfSongs.count{
             currentQueuePosition = 0
-            print(queueOfSongs.count)
         }
         
         var nowPlayingInfo = [String: Any]()
@@ -218,7 +218,6 @@ class MusicPlayer: ObservableObject {
             albumName = "Searching..."
         }else{
             title = queueOfSongs[currentQueuePosition].title
-            print(currentQueuePosition)
             artist = currentArtistString
             let albumId = queueOfSongs[currentQueuePosition].albumId
             if let filteredAlbums = albums?.filter { $0.id == albumId}{
@@ -236,7 +235,6 @@ class MusicPlayer: ObservableObject {
         nowPlayingInfo[MPMediaItemPropertyArtist] = artist
         
         nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = albumName
-        print(albumName)
 
         let imageURL = albumArtUrl(listedSong: queueOfSongs[currentQueuePosition], size: 248)!
 #if os(iOS)
@@ -334,9 +332,10 @@ class MusicPlayer: ObservableObject {
         if currentQueuePosition > 0{
             currentQueuePosition -= 1
         }
-        addSingleSongToQueue(songToPlay: queueOfSongs[currentQueuePosition], currentUser: activeUser!)
         
-        updateNowPlayingInfo()
+        //add the previous song back to the queue
+        addSingleSongToQueue(songToPlay: queueOfSongs[currentQueuePosition], currentUser: activeUser!, addQueueData: false)
+        
         
         for allItem in allItems {
             player.insert(allItem, after: player.items().last)

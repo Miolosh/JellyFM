@@ -48,7 +48,6 @@ struct albumView: View {
                     Text(artists)
                         .font(.subheadline)
                         .foregroundColor(Color.gray)
-                    Text(listedAlbum.id)
                     
                     
                 }
