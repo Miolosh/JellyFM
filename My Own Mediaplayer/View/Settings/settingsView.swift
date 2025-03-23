@@ -33,6 +33,13 @@ struct settingsView: View {
                         
                     }
                     Section{
+                        NavigationLink{
+                            Acknowledgements()
+                        }label:{
+                            Text("Acknowledgements")
+                        }
+                    }
+                    Section{
                         Button("Log Out"){
                             logOut()
                         }
@@ -52,8 +59,8 @@ struct settingsView: View {
                     }.listRowBackground(Color(UIColor.systemGroupedBackground))
                 }
                 
-            }
-        }.navigationTitle("Settings")
+            }.navigationTitle("Settings")
+        }
     }
     
     
