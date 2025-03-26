@@ -18,6 +18,7 @@ class LoginViewModel: ObservableObject{
 
     @Published var lastUser: user? = nil
     
+    let clientName = "JellyFM"
     
     
     public func checkServer(usedServerAdress: String, usedUsername: String, usedPassword: String, usedDeviceId: String, deviceType: String) -> Void{
@@ -51,10 +52,11 @@ class LoginViewModel: ObservableObject{
             "Pw": usedPassword
         ]
         
-        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"]
+        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"]!
+        print(version!)
         
         let headers: HTTPHeaders = [
-            "Authorization": "MediaBrowser Client='Toons Media Player', Device='\(deviceType)', DeviceId='\(usedDeviceId)', Version='\(version)'"
+            "Authorization": "MediaBrowser Client='\(clientName)', Device='\(deviceType)', DeviceId='\(usedDeviceId)', Version='\(version!)'"
         ]
         
         AF.request(authURL, method: .post, parameters: codings, encoding: JSONEncoding.default, headers: headers)
