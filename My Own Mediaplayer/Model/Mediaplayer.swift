@@ -80,6 +80,8 @@ class MusicPlayer: ObservableObject {
         
         player.play()
         isPlaying = true
+        isShuffled = false
+        originalQueueWithoutShuffle = []
         playlistEnded = false
         addPeriodicTimeObserver()
         createArtistString(currentSong: queueOfSongs[0])
@@ -116,10 +118,8 @@ class MusicPlayer: ObservableObject {
         
         var songsToAddInQueue: [song] = []
         var newQueueOfSongs: [song] = []
-        var currentTime = CMTime.zero
         var currentSongIndex: Int = 0
         
-        currentTime = player.currentTime()
         
         if !isShuffled{
             let currentSong = queueOfSongs[currentQueuePosition]
@@ -128,41 +128,61 @@ class MusicPlayer: ObservableObject {
             tempSongs.shuffle()
             originalQueueWithoutShuffle = queueOfSongs
             newQueueOfSongs = []
-            /*var i = 0
+            
+            /*
+             This can be used to get only a partly shuffle.
+             A a residual could be kept for when the queue is getting empty
+             
+             var i = 0
              
              while songsToAddInQueue.count > 0{
              i = Int.random(in: 1...songsToAddInQueue.count)
              newQueueOfSongs.append(songsToAddInQueue[i - 1])
              songsToAddInQueue.remove(at: i - 1)
              }*/
-            songsToAddInQueue.append(currentSong)
-            songsToAddInQueue = songsToAddInQueue + tempSongs
+            
+            songsToAddInQueue = tempSongs
             isShuffled = true
+            currentQueuePosition = 0
+            
+            newQueueOfSongs = songsToAddInQueue
+            
+            queueOfSongs = []
+             let items = player.items() // Get all items in the queue
+             for item in items.dropFirst() { // Skip the first item
+                 player.remove(item) // Remove remaining items one by one
+             }
+            
+            for newQueueOfSong in newQueueOfSongs {
+                addSongToQueue(songToPlay: newQueueOfSong, currentUser: activeUser!)
+            }
+            
+            queueOfSongs = [currentSong] + queueOfSongs
             
         }else{
+            if originalQueueWithoutShuffle == []{return isShuffled = false}
+            
             let currentSong = queueOfSongs[currentQueuePosition]
             songsToAddInQueue = originalQueueWithoutShuffle
             originalQueueWithoutShuffle = []
+            
+            let items = player.items() // Get all items in the queue
+            for item in items.dropFirst() { // Skip the first item
+                player.remove(item) // Remove remaining items one by one
+            }
+           
+            queueOfSongs = songsToAddInQueue
+            currentSongIndex = queueOfSongs.firstIndex(of: currentSong)!
+            
+            for i in currentSongIndex + 1...queueOfSongs.count - 1{
+            
+                addSingleSongToQueue(songToPlay: queueOfSongs[i], currentUser: activeUser!, addQueueData: false)
+           }
+            
             isShuffled = false
-            currentSongIndex = songsToAddInQueue.firstIndex(of: currentSong)!
+            currentQueuePosition = currentSongIndex
             
         }
-        newQueueOfSongs = songsToAddInQueue
-        
-        queueOfSongs = []
-        player.removeAllItems()
-        
-        for newQueueOfSong in newQueueOfSongs {
-            addSongToQueue(songToPlay: newQueueOfSong, currentUser: activeUser!)
-        }
-        var i = 0
-        
-        while !isShuffled && i < currentSongIndex{
-            playNextTrack()
-            i += 1
-        }
-        
-        player.seek(to: currentTime)
     }
     
     
@@ -257,6 +277,8 @@ class MusicPlayer: ObservableObject {
             currentQueuePosition += 1
             createArtistString(currentSong: queueOfSongs[currentQueuePosition])
             i += 1
+            print("Seeking")
+            print(currentQueuePosition)
         }
         
         //safefail if currentposition would be behind the real song.
@@ -367,6 +389,12 @@ class MusicPlayer: ObservableObject {
         if player.items().count > 1 {
             player.advanceToNextItem()
             currentQueuePosition += 1
+            print(queueOfSongs.count)
+            print(currentQueuePosition)
+            
+            if currentQueuePosition > queueOfSongs.count - 1 {
+                return print("oops, something went wrong...")
+            }
             createArtistString(currentSong: queueOfSongs[currentQueuePosition])
             updateNowPlayingInfo()
             player.seek(to: .zero)
@@ -386,10 +414,17 @@ class MusicPlayer: ObservableObject {
     
     func moveBackInQueue(){
         let allItems = player.items()
-        player.removeAllItems()
-        if currentQueuePosition > 0{
+        
+        if(currentQueuePosition == queueOfSongs.count - 1 && allItems.isEmpty){
+            //Do absolutely nothing
+            //the last song has to be replayed and all items should be empty;
+        }else if (currentQueuePosition > 0){
             currentQueuePosition -= 1
+        }else{
+            player.seek(to: .zero)
+            return print("no previous songs")
         }
+        player.removeAllItems()
         
         //add the previous song back to the queue
         addSingleSongToQueue(songToPlay: queueOfSongs[currentQueuePosition], currentUser: activeUser!, addQueueData: false)
