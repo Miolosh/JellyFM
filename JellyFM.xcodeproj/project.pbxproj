@@ -36,19 +36,9 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		050523122D578DF400D36FF6 /* My Own Mediaplayer */ = {
+		050523122D578DF400D36FF6 /* JellyFM */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "My Own Mediaplayer";
-			sourceTree = "<group>";
-		};
-		050523262D578DF700D36FF6 /* My Own MediaplayerTests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "My Own MediaplayerTests";
-			sourceTree = "<group>";
-		};
-		050523302D578DF700D36FF6 /* My Own MediaplayerUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "My Own MediaplayerUITests";
+			path = JellyFM;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -83,9 +73,7 @@
 			isa = PBXGroup;
 			children = (
 				05083CBE2D6BC1A000EA3D87 /* decisionLog.md */,
-				050523122D578DF400D36FF6 /* My Own Mediaplayer */,
-				050523262D578DF700D36FF6 /* My Own MediaplayerTests */,
-				050523302D578DF700D36FF6 /* My Own MediaplayerUITests */,
+				050523122D578DF400D36FF6 /* JellyFM */,
 				050523112D578DF400D36FF6 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -116,7 +104,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				050523122D578DF400D36FF6 /* My Own Mediaplayer */,
+				050523122D578DF400D36FF6 /* JellyFM */,
 			);
 			name = JellyFM;
 			packageProductDependencies = (
@@ -139,9 +127,6 @@
 			dependencies = (
 				050523252D578DF700D36FF6 /* PBXTargetDependency */,
 			);
-			fileSystemSynchronizedGroups = (
-				050523262D578DF700D36FF6 /* My Own MediaplayerTests */,
-			);
 			name = JellyFMTests;
 			packageProductDependencies = (
 			);
@@ -161,9 +146,6 @@
 			);
 			dependencies = (
 				0505232F2D578DF700D36FF6 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				050523302D578DF700D36FF6 /* My Own MediaplayerUITests */,
 			);
 			name = JellyFMUITests;
 			packageProductDependencies = (
