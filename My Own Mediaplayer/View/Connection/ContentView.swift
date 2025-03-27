@@ -1,6 +1,6 @@
 //
 //  ContentView.swift
-//  My Own Mediaplayer
+//  JellyFM
 //
 //  Created by Toon van der Have on 08/02/2025.
 //

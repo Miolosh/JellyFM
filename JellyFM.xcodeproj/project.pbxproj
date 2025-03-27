@@ -29,9 +29,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		050523102D578DF400D36FF6 /* My Own Mediaplayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "My Own Mediaplayer.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		050523232D578DF700D36FF6 /* My Own MediaplayerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "My Own MediaplayerTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		0505232D2D578DF700D36FF6 /* My Own MediaplayerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "My Own MediaplayerUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		050523102D578DF400D36FF6 /* JellyFM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JellyFM.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		050523232D578DF700D36FF6 /* JellyFMTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JellyFMTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		0505232D2D578DF700D36FF6 /* JellyFMUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JellyFMUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		05083CBE2D6BC1A000EA3D87 /* decisionLog.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = decisionLog.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -93,9 +93,9 @@
 		050523112D578DF400D36FF6 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				050523102D578DF400D36FF6 /* My Own Mediaplayer.app */,
-				050523232D578DF700D36FF6 /* My Own MediaplayerTests.xctest */,
-				0505232D2D578DF700D36FF6 /* My Own MediaplayerUITests.xctest */,
+				050523102D578DF400D36FF6 /* JellyFM.app */,
+				050523232D578DF700D36FF6 /* JellyFMTests.xctest */,
+				0505232D2D578DF700D36FF6 /* JellyFMUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -103,9 +103,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		0505230F2D578DF400D36FF6 /* My Own Mediaplayer */ = {
+		0505230F2D578DF400D36FF6 /* JellyFM */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 050523372D578DF700D36FF6 /* Build configuration list for PBXNativeTarget "My Own Mediaplayer" */;
+			buildConfigurationList = 050523372D578DF700D36FF6 /* Build configuration list for PBXNativeTarget "JellyFM" */;
 			buildPhases = (
 				0505230C2D578DF400D36FF6 /* Sources */,
 				0505230D2D578DF400D36FF6 /* Frameworks */,
@@ -118,17 +118,17 @@
 			fileSystemSynchronizedGroups = (
 				050523122D578DF400D36FF6 /* My Own Mediaplayer */,
 			);
-			name = "My Own Mediaplayer";
+			name = JellyFM;
 			packageProductDependencies = (
 				050523472D579A5000D36FF6 /* Alamofire */,
 			);
 			productName = "My Own Mediaplayer";
-			productReference = 050523102D578DF400D36FF6 /* My Own Mediaplayer.app */;
+			productReference = 050523102D578DF400D36FF6 /* JellyFM.app */;
 			productType = "com.apple.product-type.application";
 		};
-		050523222D578DF700D36FF6 /* My Own MediaplayerTests */ = {
+		050523222D578DF700D36FF6 /* JellyFMTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0505233A2D578DF700D36FF6 /* Build configuration list for PBXNativeTarget "My Own MediaplayerTests" */;
+			buildConfigurationList = 0505233A2D578DF700D36FF6 /* Build configuration list for PBXNativeTarget "JellyFMTests" */;
 			buildPhases = (
 				0505231F2D578DF700D36FF6 /* Sources */,
 				050523202D578DF700D36FF6 /* Frameworks */,
@@ -142,16 +142,16 @@
 			fileSystemSynchronizedGroups = (
 				050523262D578DF700D36FF6 /* My Own MediaplayerTests */,
 			);
-			name = "My Own MediaplayerTests";
+			name = JellyFMTests;
 			packageProductDependencies = (
 			);
 			productName = "My Own MediaplayerTests";
-			productReference = 050523232D578DF700D36FF6 /* My Own MediaplayerTests.xctest */;
+			productReference = 050523232D578DF700D36FF6 /* JellyFMTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		0505232C2D578DF700D36FF6 /* My Own MediaplayerUITests */ = {
+		0505232C2D578DF700D36FF6 /* JellyFMUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0505233D2D578DF700D36FF6 /* Build configuration list for PBXNativeTarget "My Own MediaplayerUITests" */;
+			buildConfigurationList = 0505233D2D578DF700D36FF6 /* Build configuration list for PBXNativeTarget "JellyFMUITests" */;
 			buildPhases = (
 				050523292D578DF700D36FF6 /* Sources */,
 				0505232A2D578DF700D36FF6 /* Frameworks */,
@@ -165,11 +165,11 @@
 			fileSystemSynchronizedGroups = (
 				050523302D578DF700D36FF6 /* My Own MediaplayerUITests */,
 			);
-			name = "My Own MediaplayerUITests";
+			name = JellyFMUITests;
 			packageProductDependencies = (
 			);
 			productName = "My Own MediaplayerUITests";
-			productReference = 0505232D2D578DF700D36FF6 /* My Own MediaplayerUITests.xctest */;
+			productReference = 0505232D2D578DF700D36FF6 /* JellyFMUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -195,7 +195,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 0505230B2D578DF400D36FF6 /* Build configuration list for PBXProject "My Own Mediaplayer" */;
+			buildConfigurationList = 0505230B2D578DF400D36FF6 /* Build configuration list for PBXProject "JellyFM" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -212,9 +212,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				0505230F2D578DF400D36FF6 /* My Own Mediaplayer */,
-				050523222D578DF700D36FF6 /* My Own MediaplayerTests */,
-				0505232C2D578DF700D36FF6 /* My Own MediaplayerUITests */,
+				0505230F2D578DF400D36FF6 /* JellyFM */,
+				050523222D578DF700D36FF6 /* JellyFMTests */,
+				0505232C2D578DF700D36FF6 /* JellyFMUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -271,12 +271,12 @@
 /* Begin PBXTargetDependency section */
 		050523252D578DF700D36FF6 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 0505230F2D578DF400D36FF6 /* My Own Mediaplayer */;
+			target = 0505230F2D578DF400D36FF6 /* JellyFM */;
 			targetProxy = 050523242D578DF700D36FF6 /* PBXContainerItemProxy */;
 		};
 		0505232F2D578DF700D36FF6 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 0505230F2D578DF400D36FF6 /* My Own Mediaplayer */;
+			target = 0505230F2D578DF400D36FF6 /* JellyFM */;
 			targetProxy = 0505232E2D578DF700D36FF6 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -411,6 +411,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "My-Own-Mediaplayer-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = JellyFM;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.music";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -420,7 +421,7 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
@@ -451,6 +452,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "My-Own-Mediaplayer-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = JellyFM;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.music";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -460,7 +462,7 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
@@ -494,7 +496,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/My Own Mediaplayer.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/My Own Mediaplayer";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/JellyFM.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/JellyFM";
 				XROS_DEPLOYMENT_TARGET = 2.2;
 			};
 			name = Debug;
@@ -517,7 +519,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/My Own Mediaplayer.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/My Own Mediaplayer";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/JellyFM.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/JellyFM";
 				XROS_DEPLOYMENT_TARGET = 2.2;
 			};
 			name = Release;
@@ -569,7 +571,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		0505230B2D578DF400D36FF6 /* Build configuration list for PBXProject "My Own Mediaplayer" */ = {
+		0505230B2D578DF400D36FF6 /* Build configuration list for PBXProject "JellyFM" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				050523352D578DF700D36FF6 /* Debug */,
@@ -578,7 +580,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		050523372D578DF700D36FF6 /* Build configuration list for PBXNativeTarget "My Own Mediaplayer" */ = {
+		050523372D578DF700D36FF6 /* Build configuration list for PBXNativeTarget "JellyFM" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				050523382D578DF700D36FF6 /* Debug */,
@@ -587,7 +589,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		0505233A2D578DF700D36FF6 /* Build configuration list for PBXNativeTarget "My Own MediaplayerTests" */ = {
+		0505233A2D578DF700D36FF6 /* Build configuration list for PBXNativeTarget "JellyFMTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0505233B2D578DF700D36FF6 /* Debug */,
@@ -596,7 +598,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		0505233D2D578DF700D36FF6 /* Build configuration list for PBXNativeTarget "My Own MediaplayerUITests" */ = {
+		0505233D2D578DF700D36FF6 /* Build configuration list for PBXNativeTarget "JellyFMUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0505233E2D578DF700D36FF6 /* Debug */,
