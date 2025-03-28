@@ -94,20 +94,34 @@ struct ContentView: View {
                                 .font(.caption)
                                 .foregroundColor(Color.red)
                         }
-                        
-                        Button(action: {
-                            checkServer()
-                        }) {
-                            Text("Sign In")
-                                .font(.headline)
-                                .foregroundColor(.white)
-                                .frame(width: 300, height: 50)
-                                .background(Color.green)
-                                .cornerRadius(15.0)
-                                .shadow(radius: 10.0, x: 20, y: 10)
+                        HStack{
+                            Button(action: {
+                                checkServer()
+                            }) {
+                                Text("Sign In")
+                                    .font(.headline)
+                                    .foregroundColor(.white)
+                                    .frame(width: 140, height: 50)
+                                    .background(Color.green)
+                                    .cornerRadius(15.0)
+                                    .shadow(radius: 10.0, x: 20, y: 10)
+                            }
+                            .frame(maxWidth:.infinity)
+                            .padding(.top, 30)
+                            Button(action: {
+                                startDemo()
+                            }) {
+                                Text("Demo")
+                                    .font(.headline)
+                                    .foregroundColor(.white)
+                                    .frame(width: 140, height: 50)
+                                    .background(Color.green)
+                                    .cornerRadius(15.0)
+                                    .shadow(radius: 10.0, x: 20, y: 10)
+                            }
+                            .frame(maxWidth:.infinity)
+                            .padding(.top, 30)
                         }
-                        .frame(maxWidth:.infinity)
-                        .padding(.top, 30)
                     }
                     Spacer()
                 }.padding([.leading, .trailing], 40)
@@ -185,6 +199,10 @@ struct ContentView: View {
         #endif
         viewModel.checkServer(usedServerAdress: serverURL, usedUsername: loginName, usedPassword: password, usedDeviceId: deviceID ?? "", deviceType: deviceType)
         
+    }
+    
+    func startDemo(){
+        viewModel.checkServer(usedServerAdress: "https://demo.jellyfin.org/stable", usedUsername: "demo", usedPassword: "", usedDeviceId: "", deviceType: "")
     }
 }
 
