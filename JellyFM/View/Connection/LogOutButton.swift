@@ -9,19 +9,34 @@ import SwiftUI
 import SwiftData
 
 struct logOutButton: View {
+    
+    @StateObject private var viewModel: LoginViewModel
+    @Environment(\.modelContext) private var modelContext
+    @Query private var users: [user]
+    
+    
+    init() {
+        _viewModel = StateObject(wrappedValue: LoginViewModel())
+    }
+    
     var body: some View {
-        Button(action: {
-            // Define the action for your button here
-            print("Logo Button Tapped")
-        }) {
-            Image(systemName: "rectangle.portrait.and.arrow.right")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 30, height: 30) // Adjust size as needed
+        Button("Log Out"){
+            logOut()
+        }
+        .foregroundColor(Color.red)
+    }
+    
+    
+    
+    func logOut() {
+        for thisUser in users {
+            modelContext.delete(thisUser)
+            viewModel.endSession(usedServerAdress: thisUser.serverIP, currentUser: thisUser)
         }
     }
+    
 }
 
 #Preview {
-    logOutButton()
+    //logOutButton()
 }

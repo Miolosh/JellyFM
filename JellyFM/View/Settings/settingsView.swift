@@ -40,10 +40,7 @@ struct settingsView: View {
                         }
                     }
                     Section{
-                        Button("Log Out"){
-                            logOut()
-                        }
-                        .foregroundColor(Color.red)
+                        logOutButton()
                     }
                     
                     Section{

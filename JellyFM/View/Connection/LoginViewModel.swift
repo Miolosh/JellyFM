@@ -37,7 +37,6 @@ class LoginViewModel: ObservableObject{
                     
                 case .failure(_):
                     print("server false")
-                    print("\(systemURL)")
                     self.serverMistake = true
                 }
             }
@@ -53,7 +52,6 @@ class LoginViewModel: ObservableObject{
         ]
         
         let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"]!
-        print(version!)
         
         let headers: HTTPHeaders = [
             "Authorization": "MediaBrowser Client='\(clientName)', Device='\(deviceType)', DeviceId='\(usedDeviceId)', Version='\(version!)'"
@@ -72,6 +70,26 @@ class LoginViewModel: ObservableObject{
                     self.loginMistake = true
                     
                     print("login false")
+                }
+            }
+    }
+    
+    public func endSession(usedServerAdress: String, currentUser: user){
+        let authURL = "\(usedServerAdress)/Sessions/Logout"
+        
+        
+        let headers: HTTPHeaders = [
+            "Authorization": "MediaBrowser Token=\(currentUser.token)"
+        ]
+        
+        AF.request(authURL, method: .post, encoding: JSONEncoding.default, headers: headers)
+            .response{response in
+                switch response.result {
+                case .success(let value):
+                    print("finished")
+                    
+                case .failure(_):
+                    print("could not Logout")
                 }
             }
     }
