@@ -504,4 +504,5 @@ class MusicPlayer: ObservableObject {
     func changeKbpsStream(amount: Int){
         UserDefaults.standard.set(amount, forKey: "streamSpeed")
     }
+    
 }

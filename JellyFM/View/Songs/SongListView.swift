@@ -20,6 +20,9 @@ struct SongListView: View {
     
     @State private var showingSheet = false
     @State var songlistNeedReload = false
+    @State private var searchText: String = ""
+    
+    @State private var filteredSongs: [song] = []
     
     // UserDefaults Keys
     enum UserDefaultsKeys {
@@ -49,7 +52,7 @@ struct SongListView: View {
     
     // Sorting Logic
     var sortedSongs: [song] {
-        let sorted: [song]
+        var sorted: [song]
         switch sortingOption {
         case .titleAscending:
             sorted = songs.sorted { $0.title.lowercased() < $1.title.lowercased() }
@@ -58,12 +61,30 @@ struct SongListView: View {
         case .dateCreated:
             sorted = songs.sorted { $0.dateCreated < $1.dateCreated }
         }
+        
+        if searchText.isEmpty{
+            
+        }else{
+            sorted = sorted.filter { $0.title.lowercased().contains(searchText.lowercased())}
+        }
+        
         return ascendingOrder ? sorted : sorted.reversed()
     }
     
     var body: some View {
         VStack {
             List {
+                HStack {
+                    Image(systemName: "magnifyingglass") // Search icon
+                        .foregroundColor(.gray) // Icon color
+                    TextField("Search for a song...", text: $searchText)
+                        .textFieldStyle(PlainTextFieldStyle()) // Use PlainTextFieldStyle for better layout control
+                }
+                .padding(8)
+                .background(Color(.systemGray6)) // Add background color to mimic search bar style
+                .cornerRadius(8) // Rounded corner
+                .listRowSeparator(.hidden)
+                
                 ForEach(Array(sortedSongs.enumerated()), id: \.element.id) { (index, item) in
                     Button(action: {
                         MusicPlayer.shared.playSongAndQueue(queueNumber: index, currentUser: users[0], queueList: sortedSongs, allAlbums: albums)
