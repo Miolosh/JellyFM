@@ -40,6 +40,9 @@ class MusicPlayer: ObservableObject {
         player.allowsExternalPlayback = false
         configureAudioSession()
         #endif
+        player.publisher(for: \.rate)
+            .map { $0 > 0 }
+            .assign(to: &$isPlaying)
     }
 
     
@@ -208,7 +211,6 @@ class MusicPlayer: ObservableObject {
                 playlistEnded = false
             }
             player.play()
-            isPlaying = true
         }
     }
 
@@ -225,7 +227,6 @@ class MusicPlayer: ObservableObject {
         commandCenter.playCommand.addTarget { [unowned self] event in
             if player.rate == 0.0 {
                 player.play()
-                isPlaying = true
                 return .success
             }
             return .commandFailed
@@ -234,7 +235,6 @@ class MusicPlayer: ObservableObject {
         commandCenter.pauseCommand.addTarget { [unowned self] event in
             if player.rate == 1.0 {
                 player.pause()
-                isPlaying = false
                 return .success
             }
             return .commandFailed
@@ -277,8 +277,6 @@ class MusicPlayer: ObservableObject {
             currentQueuePosition += 1
             createArtistString(currentSong: queueOfSongs[currentQueuePosition])
             i += 1
-            print("Seeking")
-            print(currentQueuePosition)
         }
         
         //safefail if currentposition would be behind the real song.
