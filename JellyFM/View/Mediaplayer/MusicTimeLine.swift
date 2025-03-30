@@ -38,6 +38,9 @@ struct MusicTimeLine: View {
         if isDragging{
             totalSeconds = currentTime
         }
+        if totalSeconds.isNaN{
+            return "NaN"
+        }
         let minutes = Int(totalSeconds) / 60
         let seconds = Int(totalSeconds) % 60
         

@@ -23,7 +23,7 @@ struct BottomPlayerView: View{
                 Divider()
                     .background(Color.green)
                 HStack(){
-                    let currentlyPlayingSong = musicPlayer.queueOfSongs[musicPlayer.currentQueuePosition]
+                    let currentlyPlayingSong = musicPlayer.queue.queueOfSongs[musicPlayer.queue.currentQueuePosition]
                         AsyncImage(url: URL(string: "\(musicPlayer.activeUser?.serverIP ?? "")/Items/\(currentlyPlayingSong.albumId)/Images/Primary?fillHeight=64&fillWidth=64&quality=96&tag=726197babb87ba7515d495fad56d81ed")) { image in
                             image.resizable()
                                 .aspectRatio(contentMode: .fit)

@@ -13,12 +13,11 @@ import SwiftData
 //this is currently by design :)
 class MusicPlayer: ObservableObject {
     
-    @Environment(\.modelContext) private var modelContext
-    
     static let shared = MusicPlayer()
     
     var player: AVQueuePlayer = AVQueuePlayer()
-    var currentQueuePosition = 0
+    
+    
     var playlistEnded = false
     var activeUser: user?
     var timeObserverToken: Any?
@@ -26,11 +25,10 @@ class MusicPlayer: ObservableObject {
     var currentTitle: String?
     var originalQueueWithoutShuffle: [song] = []
     
-    @Published var queueOfSongs: [song] = []
+    @Published var queue: queueObject = queueObject()
     @Published var currentArtistString: String = ""
     @Published var isPlaying: Bool = false
     @Published var isRepeatingSong: Bool = false
-    @Published var isShuffled: Bool = false
     
     var albums: [album]?
 
@@ -48,15 +46,17 @@ class MusicPlayer: ObservableObject {
     
     //this function is called by views. It deletes the full queue and starts a new one. (clicking on a song)
     func playSongAndQueue(queueNumber: Int, currentUser: user, queueList: [song], allAlbums: [album]){
+        var newQueue: [song] = []
         MusicPlayer.shared.startNewQueue(songToPlay: queueList[queueNumber], currentUser: currentUser)
         self.albums = allAlbums
         if queueNumber + 1 >= queueList.count {
             return
         }
         
-        for i in queueNumber + 1...queueList.count - 1{
-            MusicPlayer.shared.addSongToQueue(songToPlay: queueList[i], currentUser: currentUser)
-        }
+        newQueue = queueList
+        newQueue.removeSubrange(0..<queueNumber + 1)
+        
+        queue.addSongsToQueue(songsToAdd: newQueue)
         
         
     }
@@ -66,7 +66,7 @@ class MusicPlayer: ObservableObject {
         if player.items().count == 0{
             startNewQueue(songToPlay: songToPlay, currentUser: currentUser)
         }else{
-            addSingleSongToQueue(songToPlay: songToPlay, currentUser: currentUser)
+            queue.addSongsToQueue(songsToAdd: [songToPlay])
         }
         
         
@@ -76,116 +76,31 @@ class MusicPlayer: ObservableObject {
     private func startNewQueue(songToPlay: song, currentUser: user){
         activeUser = currentUser
         player.removeAllItems()
-        queueOfSongs = []
-        currentQueuePosition = 0
+        queue.startNewQueue(newQueue: [songToPlay])
         
-        addSingleSongToQueue(songToPlay: songToPlay, currentUser: currentUser)
+        addSongToAVQueuePlayer(songToPlay: songToPlay, currentUser: currentUser)
         
         player.play()
         isPlaying = true
-        isShuffled = false
         originalQueueWithoutShuffle = []
-        playlistEnded = false
         addPeriodicTimeObserver()
-        createArtistString(currentSong: queueOfSongs[0])
+        createArtistString(currentSong: queue.queueOfSongs[0])
         updateNowPlayingInfo()
         
     }
     
-    
-    private func addSingleSongToQueue(songToPlay: song, currentUser: user, addQueueData: Bool = true){
+    private func addSongToAVQueuePlayer(songToPlay: song, currentUser: user){
         let songId = songToPlay.id
-        
-        //FLAC and wave are not included as containers to make sure the stream is encoded to MP3.
-        //Besides, FLACs will not be able to be played due to apple. Seeking will break if using FLAC.
-        //This is an issue in all jellyfin clients (even the official webplayer).
-        
         let url = createUrl(songId: songId, currentUser: currentUser)!
         
         let playerItem = AVPlayerItem(url: url)
-        
-        
-        if addQueueData{
-            queueOfSongs.append(songToPlay)
-        }
-        
-        
         player.insert(playerItem, after: player.items().last)
         
     }
     
+    
     func shuffleQueue(){
-        if queueOfSongs.count == 0{
-            return print("Queue of songs is empty and cannot be shuffled")
-        }
-        
-        var songsToAddInQueue: [song] = []
-        var newQueueOfSongs: [song] = []
-        var currentSongIndex: Int = 0
-        
-        
-        if !isShuffled{
-            let currentSong = queueOfSongs[currentQueuePosition]
-            var tempSongs = queueOfSongs
-            tempSongs.remove(at: currentQueuePosition)
-            tempSongs.shuffle()
-            originalQueueWithoutShuffle = queueOfSongs
-            newQueueOfSongs = []
-            
-            /*
-             This can be used to get only a partly shuffle.
-             A a residual could be kept for when the queue is getting empty
-             
-             var i = 0
-             
-             while songsToAddInQueue.count > 0{
-             i = Int.random(in: 1...songsToAddInQueue.count)
-             newQueueOfSongs.append(songsToAddInQueue[i - 1])
-             songsToAddInQueue.remove(at: i - 1)
-             }*/
-            
-            songsToAddInQueue = tempSongs
-            isShuffled = true
-            currentQueuePosition = 0
-            
-            newQueueOfSongs = songsToAddInQueue
-            
-            queueOfSongs = []
-             let items = player.items() // Get all items in the queue
-             for item in items.dropFirst() { // Skip the first item
-                 player.remove(item) // Remove remaining items one by one
-             }
-            
-            for newQueueOfSong in newQueueOfSongs {
-                addSongToQueue(songToPlay: newQueueOfSong, currentUser: activeUser!)
-            }
-            
-            queueOfSongs = [currentSong] + queueOfSongs
-            
-        }else{
-            if originalQueueWithoutShuffle == []{return isShuffled = false}
-            
-            let currentSong = queueOfSongs[currentQueuePosition]
-            songsToAddInQueue = originalQueueWithoutShuffle
-            originalQueueWithoutShuffle = []
-            
-            let items = player.items() // Get all items in the queue
-            for item in items.dropFirst() { // Skip the first item
-                player.remove(item) // Remove remaining items one by one
-            }
-           
-            queueOfSongs = songsToAddInQueue
-            currentSongIndex = queueOfSongs.firstIndex(of: currentSong)!
-            
-            for i in currentSongIndex + 1...queueOfSongs.count - 1{
-            
-                addSingleSongToQueue(songToPlay: queueOfSongs[i], currentUser: activeUser!, addQueueData: false)
-           }
-            
-            isShuffled = false
-            currentQueuePosition = currentSongIndex
-            
-        }
+        queue.shuffleQueue(player: player)
     }
     
     
@@ -204,12 +119,11 @@ class MusicPlayer: ObservableObject {
     func togglePlayPause() {
         if player.timeControlStatus == .playing {
             player.pause()
-            isPlaying = false
         } else {
-            if playlistEnded {
+            /*if playlistEnded {
                 player.seek(to: .zero)
                 playlistEnded = false
-            }
+            }*/
             player.play()
         }
     }
@@ -273,15 +187,17 @@ class MusicPlayer: ObservableObject {
         //Check if currentsong == currentQueuePosition. Important for automatic move forward of songs if previous song ended.
         var i = 0
         let maxValueI = 300
-        while currentQueuePosition < queueOfSongs.count - 1 && !checkIfSame(currentSongUrl: createUrl(songId: queueOfSongs[currentQueuePosition].id, currentUser: activeUser!), newSongUrl: getCurrentSongUrl()) && i <= maxValueI{
-            currentQueuePosition += 1
-            createArtistString(currentSong: queueOfSongs[currentQueuePosition])
+        
+        //bring this to Queue
+        while queue.currentQueuePosition < queue.queueOfSongs.count - 1 && !checkIfSame(currentSongUrl: createUrl(songId: queue.returnCurrentSong().id, currentUser: activeUser!), newSongUrl: getCurrentSongUrl()) && i <= maxValueI{
+            queue.currentQueuePosition += 1
+            createArtistString(currentSong: queue.returnCurrentSong())
             i += 1
         }
         
         //safefail if currentposition would be behind the real song.
-        if currentQueuePosition >= queueOfSongs.count{
-            currentQueuePosition = 0
+        if queue.currentQueuePosition >= queue.queueOfSongs.count{
+            queue.currentQueuePosition = 0
         }
         
         var nowPlayingInfo = [String: Any]()
@@ -295,9 +211,9 @@ class MusicPlayer: ObservableObject {
             artist = "Searching..."
             albumName = "Searching..."
         }else{
-            title = queueOfSongs[currentQueuePosition].title
+            title = queue.returnCurrentSong().title
             artist = currentArtistString
-            let albumId = queueOfSongs[currentQueuePosition].albumId
+            let albumId = queue.returnCurrentSong().albumId
             if let filteredAlbums = albums?.filter({$0.id == albumId}){
                 if filteredAlbums.count > 0{
                     albumName = filteredAlbums[0].title
@@ -314,7 +230,7 @@ class MusicPlayer: ObservableObject {
         
         nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = albumName
 
-        let imageURL = albumArtUrl(listedSong: queueOfSongs[currentQueuePosition], size: 248)!
+        let imageURL = albumArtUrl(listedSong: queue.returnCurrentSong(), size: 248)!
 #if os(iOS)
         downloadImage(from: imageURL) { image in
             if let image = image {
@@ -337,7 +253,15 @@ class MusicPlayer: ObservableObject {
                 }
             }
         }
-
+        
+        var amountToPreload = 10
+        if player.items().count < amountToPreload {
+            var newSongs = queue.getNextItems(from: player.items().count, to: amountToPreload)
+            print(newSongs.count)
+            for newsong in newSongs{
+                addSongToAVQueuePlayer(songToPlay: newsong, currentUser: activeUser!)
+            }
+        }
         
         #endif
 
@@ -386,14 +310,12 @@ class MusicPlayer: ObservableObject {
     func playNextTrack() {
         if player.items().count > 1 {
             player.advanceToNextItem()
-            currentQueuePosition += 1
-            print(queueOfSongs.count)
-            print(currentQueuePosition)
+            queue.currentQueuePosition += 1
             
-            if currentQueuePosition > queueOfSongs.count - 1 {
+            if queue.currentQueuePosition > queue.queueOfSongs.count - 1 {
                 return print("oops, something went wrong...")
             }
-            createArtistString(currentSong: queueOfSongs[currentQueuePosition])
+            createArtistString(currentSong: queue.returnCurrentSong())
             updateNowPlayingInfo()
             player.seek(to: .zero)
         } else {
@@ -413,26 +335,25 @@ class MusicPlayer: ObservableObject {
     func moveBackInQueue(){
         let allItems = player.items()
         
-        if(currentQueuePosition == queueOfSongs.count - 1 && allItems.isEmpty){
+        if(queue.currentQueuePosition == queue.queueOfSongs.count - 1 && allItems.isEmpty){
             //Do absolutely nothing
             //the last song has to be replayed and all items should be empty;
-        }else if (currentQueuePosition > 0){
-            currentQueuePosition -= 1
+        }else if (queue.currentQueuePosition > 0){
+            queue.currentQueuePosition -= 1
         }else{
             player.seek(to: .zero)
             return print("no previous songs")
         }
         player.removeAllItems()
         
-        //add the previous song back to the queue
-        addSingleSongToQueue(songToPlay: queueOfSongs[currentQueuePosition], currentUser: activeUser!, addQueueData: false)
+        addSongToAVQueuePlayer(songToPlay: queue.returnCurrentSong(), currentUser: activeUser!)
         
         
         for allItem in allItems {
             player.insert(allItem, after: player.items().last)
         }
         player.play()
-        createArtistString(currentSong: queueOfSongs[currentQueuePosition])
+        createArtistString(currentSong: queue.returnCurrentSong())
     }
     
     func playPreviousTrack() {

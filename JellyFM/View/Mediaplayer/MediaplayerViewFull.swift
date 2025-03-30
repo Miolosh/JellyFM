@@ -18,7 +18,7 @@ struct MediaplayerViewFull: View {
     var body: some View {
         
         ZStack {
-            let currentlyPlayingSong = musicPlayer.queueOfSongs[musicPlayer.currentQueuePosition]
+            let currentlyPlayingSong = musicPlayer.queue.queueOfSongs[musicPlayer.queue.currentQueuePosition]
             // Background overlay
             AsyncImage(url: URL(string: "\(musicPlayer.activeUser?.serverIP ?? "")/Items/\(currentlyPlayingSong.albumId)/Images/Primary?fillHeight=480&fillWidth=480&quality=96&tag=726197babb87ba7515d495fad56d81ed")) { image in
                 image
@@ -59,7 +59,7 @@ struct MediaplayerViewFull: View {
                         .multilineTextAlignment(.center)
                         .frame(maxWidth: 300, alignment: .center)
                     
-                    let currentlyPlayingSong = musicPlayer.queueOfSongs[musicPlayer.currentQueuePosition]
+                    let currentlyPlayingSong = musicPlayer.queue.queueOfSongs[musicPlayer.queue.currentQueuePosition]
                     AsyncImage(url: URL(string: "\(musicPlayer.activeUser?.serverIP ?? "")/Items/\(currentlyPlayingSong.albumId)/Images/Primary?fillHeight=480&fillWidth=480&quality=96&tag=726197babb87ba7515d495fad56d81ed")) { image in
                         image
                             .resizable()
@@ -110,7 +110,7 @@ struct MediaplayerViewFull: View {
                             Image(systemName: "shuffle")
                                 .resizable()
                                 .frame(width: 24, height: 24)
-                                .foregroundColor(musicPlayer.isShuffled ? .green : .black)
+                                .foregroundColor(musicPlayer.queue.isShuffled ? .green : .black)
                         }
                         .padding()
                         Button(action: {

@@ -25,18 +25,18 @@ struct QueueOfSongs: View {
                     Text("Now playing")
                         .listRowSeparator(.hidden)
                         .font(.headline)
-                    SongView(listedSong: musicPlayer.queueOfSongs[musicPlayer.currentQueuePosition],newUser: musicPlayer.activeUser!)
+                    SongView(listedSong: musicPlayer.queue.queueOfSongs[musicPlayer.queue.currentQueuePosition],newUser: musicPlayer.activeUser!)
                
                     
                         
                 }
                 
-                if musicPlayer.currentQueuePosition > 0{
+                if musicPlayer.queue.currentQueuePosition > 0{
                     Section(){
                         DisclosureGroup( isExpanded: $isPreviousSongsExapnded){
-                            ForEach (musicPlayer.queueOfSongs.indices){ index in
-                                if musicPlayer.currentQueuePosition > index{
-                                    SongView(listedSong: musicPlayer.queueOfSongs[index],newUser: musicPlayer.activeUser!)
+                            ForEach (musicPlayer.queue.queueOfSongs.indices){ index in
+                                if musicPlayer.queue.currentQueuePosition > index{
+                                    SongView(listedSong: musicPlayer.queue.queueOfSongs[index],newUser: musicPlayer.activeUser!)
                                 }
                             }
                         }label: {
@@ -53,9 +53,9 @@ struct QueueOfSongs: View {
                     Text("Upcomming songs")
                         .font(.headline)
                         .listRowSeparator(.hidden)
-                    ForEach (musicPlayer.queueOfSongs.indices){ index in
-                        if musicPlayer.currentQueuePosition < index{
-                            SongView(listedSong: musicPlayer.queueOfSongs[index],newUser: musicPlayer.activeUser!)
+                    ForEach (musicPlayer.queue.queueOfSongs.indices){ index in
+                        if musicPlayer.queue.currentQueuePosition < index{
+                            SongView(listedSong: musicPlayer.queue.queueOfSongs[index],newUser: musicPlayer.activeUser!)
                         }
                     }
                     
