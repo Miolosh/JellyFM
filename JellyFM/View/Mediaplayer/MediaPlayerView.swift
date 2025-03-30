@@ -44,7 +44,7 @@ struct BottomPlayerView: View{
                     }
                     Spacer()
                     Button(action: {
-                        musicPlayer.playPreviousTrack()
+                        musicPlayer.requestPreviousTrack()
                     }) {
                         Image(systemName: "backward.fill")
                             .resizable()

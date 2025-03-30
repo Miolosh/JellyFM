@@ -18,6 +18,8 @@ class queueObject: ObservableObject{
     var currentQueuePosition = 0
     var originalQueueWithoutShuffle: [song] = []
     
+   
+    
     func startNewQueue(newQueue: [song]){
         queueOfSongs = newQueue
         currentQueuePosition = 0
@@ -30,7 +32,7 @@ class queueObject: ObservableObject{
     }
     
     
-    func shuffleQueue(player: AVQueuePlayer){
+    func shuffleQueue(currentMusicPlayer: MusicPlayer){
         if queueOfSongs.count == 0{
             return print("Queue of songs is empty and cannot be shuffled")
         }
@@ -48,18 +50,6 @@ class queueObject: ObservableObject{
             originalQueueWithoutShuffle = queueOfSongs
             newQueueOfSongs = []
             
-            /*
-             This can be used to get only a partly shuffle.
-             A a residual could be kept for when the queue is getting empty
-             
-             var i = 0
-             
-             while songsToAddInQueue.count > 0{
-             i = Int.random(in: 1...songsToAddInQueue.count)
-             newQueueOfSongs.append(songsToAddInQueue[i - 1])
-             songsToAddInQueue.remove(at: i - 1)
-             }*/
-            
             songsToAddInQueue = tempSongs
             isShuffled = true
             currentQueuePosition = 0
@@ -67,10 +57,7 @@ class queueObject: ObservableObject{
             newQueueOfSongs = songsToAddInQueue
             
             queueOfSongs = []
-             let items = player.items() // Get all items in the queue
-             for item in items.dropFirst() { // Skip the first item
-                 player.remove(item) // Remove remaining items one by one
-             }
+            currentMusicPlayer.deleteAllItemsExceptCurrentPlay()
             
             for newSongOfQueue in newQueueOfSongs {
                 //addSongToQueue(songToPlay: newQueueOfSong, currentUser: activeUser!)
@@ -86,10 +73,7 @@ class queueObject: ObservableObject{
             songsToAddInQueue = originalQueueWithoutShuffle
             originalQueueWithoutShuffle = []
             
-            let items = player.items() // Get all items in the queue
-            for item in items.dropFirst() { // Skip the first item
-                player.remove(item) // Remove remaining items one by one
-            }
+            currentMusicPlayer.deleteAllItemsExceptCurrentPlay()
            
             queueOfSongs = songsToAddInQueue
             currentSongIndex = queueOfSongs.firstIndex(of: currentSong)!
@@ -117,6 +101,16 @@ class queueObject: ObservableObject{
         }
         
         return nextSongs
+    }
+    
+    func advanceInQueue() -> Void{
+        currentQueuePosition += 1
+        
+        if currentQueuePosition > queueOfSongs.count - 1 {
+            print("position of queue was too large")
+            return
+        }
+        return 
     }
     
     

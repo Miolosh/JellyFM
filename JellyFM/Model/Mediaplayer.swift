@@ -23,7 +23,6 @@ class MusicPlayer: ObservableObject {
     var timeObserverToken: Any?
     var currentUrl: String?
     var currentTitle: String?
-    var originalQueueWithoutShuffle: [song] = []
     
     @Published var queue: queueObject = queueObject()
     @Published var currentArtistString: String = ""
@@ -82,9 +81,8 @@ class MusicPlayer: ObservableObject {
         
         player.play()
         isPlaying = true
-        originalQueueWithoutShuffle = []
         addPeriodicTimeObserver()
-        createArtistString(currentSong: queue.queueOfSongs[0])
+        createArtistString(currentSong: queue.returnCurrentSong())
         updateNowPlayingInfo()
         
     }
@@ -98,11 +96,9 @@ class MusicPlayer: ObservableObject {
         
     }
     
-    
     func shuffleQueue(){
-        queue.shuffleQueue(player: player)
+        queue.shuffleQueue(currentMusicPlayer: self)
     }
-    
     
     func createArtistString(currentSong: song){
         currentArtistString = ""
@@ -113,8 +109,6 @@ class MusicPlayer: ObservableObject {
             currentArtistString += artist
         }
     }
-
-    
 
     func togglePlayPause() {
         if player.timeControlStatus == .playing {
@@ -127,7 +121,6 @@ class MusicPlayer: ObservableObject {
             player.play()
         }
     }
-
 
     func stop() {
         player.pause()
@@ -162,9 +155,9 @@ class MusicPlayer: ObservableObject {
         
         commandCenter.previousTrackCommand.isEnabled = true
         commandCenter.previousTrackCommand.addTarget { [unowned self] event in
-                playPreviousTrack()
-                return .success
-            }
+            requestPreviousTrack()
+            return .success
+        }
 
         commandCenter.changePlaybackPositionCommand.isEnabled = true
         commandCenter.changePlaybackPositionCommand.addTarget { [unowned self] event in
@@ -183,14 +176,12 @@ class MusicPlayer: ObservableObject {
 
     func updateNowPlayingInfo() {
         
-        //print(getStreamedDataSize(player: player))
-        //Check if currentsong == currentQueuePosition. Important for automatic move forward of songs if previous song ended.
         var i = 0
         let maxValueI = 300
         
         //bring this to Queue
         while queue.currentQueuePosition < queue.queueOfSongs.count - 1 && !checkIfSame(currentSongUrl: createUrl(songId: queue.returnCurrentSong().id, currentUser: activeUser!), newSongUrl: getCurrentSongUrl()) && i <= maxValueI{
-            queue.currentQueuePosition += 1
+            queue.advanceInQueue()
             createArtistString(currentSong: queue.returnCurrentSong())
             i += 1
         }
@@ -254,10 +245,9 @@ class MusicPlayer: ObservableObject {
             }
         }
         
-        var amountToPreload = 10
+        let amountToPreload = 10
         if player.items().count < amountToPreload {
-            var newSongs = queue.getNextItems(from: player.items().count, to: amountToPreload)
-            print(newSongs.count)
+            let newSongs = queue.getNextItems(from: player.items().count, to: amountToPreload)
             for newsong in newSongs{
                 addSongToAVQueuePlayer(songToPlay: newsong, currentUser: activeUser!)
             }
@@ -310,11 +300,7 @@ class MusicPlayer: ObservableObject {
     func playNextTrack() {
         if player.items().count > 1 {
             player.advanceToNextItem()
-            queue.currentQueuePosition += 1
-            
-            if queue.currentQueuePosition > queue.queueOfSongs.count - 1 {
-                return print("oops, something went wrong...")
-            }
+            queue.advanceInQueue()
             createArtistString(currentSong: queue.returnCurrentSong())
             updateNowPlayingInfo()
             player.seek(to: .zero)
@@ -332,7 +318,20 @@ class MusicPlayer: ObservableObject {
         }
     }
     
-    func moveBackInQueue(){
+    
+    func requestPreviousTrack() {
+        let currentTime = player.currentTime().seconds
+
+        if currentTime > 3 {
+            // If more than 3 seconds have passed, restart the song
+            player.seek(to: .zero)
+        } else {
+            moveBackInQueue()
+            updateNowPlayingInfo()
+        }
+    }
+    
+    private func moveBackInQueue(){
         let allItems = player.items()
         
         if(queue.currentQueuePosition == queue.queueOfSongs.count - 1 && allItems.isEmpty){
@@ -356,18 +355,6 @@ class MusicPlayer: ObservableObject {
         createArtistString(currentSong: queue.returnCurrentSong())
     }
     
-    func playPreviousTrack() {
-        let currentTime = player.currentTime().seconds
-
-        if currentTime > 3 {
-            // If more than 3 seconds have passed, restart the song
-            player.seek(to: .zero)
-        } else {
-            moveBackInQueue()
-            updateNowPlayingInfo()
-        }
-    }
-    
 #if os(iOS)
     private func configureAudioSession() {
         do {
@@ -382,8 +369,6 @@ class MusicPlayer: ObservableObject {
         }
     }
     #endif
-    
-    
     
     func getCurrentSongUrl() -> URL?{
         if let currentItem = player.currentItem {
@@ -424,6 +409,13 @@ class MusicPlayer: ObservableObject {
     
     func changeKbpsStream(amount: Int){
         UserDefaults.standard.set(amount, forKey: "streamSpeed")
+    }
+    
+    public func deleteAllItemsExceptCurrentPlay(){
+        let items = player.items() // Get all items in the queue
+        for item in items.dropFirst() { // Skip the first item
+            player.remove(item) // Remove remaining items one by one
+        }
     }
     
 }

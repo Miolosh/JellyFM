@@ -75,7 +75,7 @@ struct MediaplayerViewFull: View {
                     MusicTimeLine()
                     HStack{
                         Button(action: {
-                            musicPlayer.playPreviousTrack()
+                            musicPlayer.requestPreviousTrack()
                         }) {
                             Image(systemName: "backward.fill")
                                 .resizable()
