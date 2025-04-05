@@ -21,8 +21,9 @@ final class jellyfinItem {
     var parentIndexNumber: Int
     var albumArtistId: String?
     var parentId: String?
+    var premiereDate: Date
     
-    init(id: String, title: String, artist: [String]?, albumid: String, albumArtist: String?, indexNumber: Int? = nil, dateCreated: String, parentIndexNumber: Int, albumArtistId: String, parrentId: String) {
+    init(id: String, title: String, artist: [String]?, albumid: String, albumArtist: String?, indexNumber: Int? = nil, dateCreated: String, parentIndexNumber: Int, albumArtistId: String, parrentId: String, premiereDate: String) {
         self.id = id
         self.title = title
         self.artist = artist
@@ -44,7 +45,12 @@ final class jellyfinItem {
         self.parentIndexNumber = parentIndexNumber
         self.albumArtistId = albumArtistId
         self.parentId = parrentId
-        print("this parentId = \(parrentId)")
+        
+        if let newDateCreated = dateFormatter.date(from: premiereDate) {
+            self.premiereDate = newDateCreated
+        } else {
+            self.premiereDate = Date.now
+        }
     }
     
 }
@@ -68,6 +74,7 @@ struct APISong: Codable{
     let ParentIndexNumber: Int?
     let albumArtistObj: [albumArtist]
     let parentId: String?
+    let premiereDate: String?
     
     enum CodingKeys: String, CodingKey {
         case Id = "Id"
@@ -80,6 +87,7 @@ struct APISong: Codable{
         case ParentIndexNumber = "ParentIndexNumber"
         case albumArtistObj = "AlbumArtists"
         case parentId = "ParentId"
+        case premiereDate = "PremiereDate"
     }
 }
 

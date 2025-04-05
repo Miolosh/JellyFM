@@ -19,8 +19,9 @@ final class song {
     var indexNumber: Int?
     var discNumber: Int
     var dateCreated: Date
+    var premiereDate: Date = Date.now
     
-    init(id: String, title: String, artist: [String], albumid: String, trackNumber: Int? = nil, indexNumber: Int? = nil, dateCreated: Date, discNumber: Int) {
+    init(id: String, title: String, artist: [String], albumid: String, trackNumber: Int? = nil, indexNumber: Int? = nil, dateCreated: Date, discNumber: Int, premiereDate: Date) {
         self.id = id
         self.title = title
         self.artist = artist
@@ -37,6 +38,7 @@ final class song {
         }
         self.dateCreated = dateCreated
         self.discNumber = discNumber
+        self.premiereDate = premiereDate
     }
     
 }

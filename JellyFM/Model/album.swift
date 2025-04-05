@@ -19,8 +19,9 @@ final class album {
     var albumArtistId: String?
     var dateCreated: Date
     var parentId: String?
+    var premiereDate: Date = Date.now
     
-    init(id: String, title: String, artist: [String], albumid: String, albumArtist: String?, dateCreated: Date, albumArtistId: String?, parentId: String? = nil) {
+    init(id: String, title: String, artist: [String], albumid: String, albumArtist: String?, dateCreated: Date, albumArtistId: String?, parentId: String? = nil, premiereDate: Date) {
         self.id = id
         self.title = title
         self.artist = artist
@@ -29,6 +30,7 @@ final class album {
         self.dateCreated = dateCreated
         self.albumArtistId = albumArtistId
         self.parentId = parentId
+        self.premiereDate = premiereDate
     }
 
 }

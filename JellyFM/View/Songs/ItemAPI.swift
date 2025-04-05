@@ -54,10 +54,29 @@ class ItemAPI: ObservableObject{
                         return
                     }
                     for currentSong in data.items {
-                        print(currentSong.parentId)
-                        newSong = jellyfinItem(id: currentSong.Id, title: currentSong.Title, artist: currentSong.Artists, albumid: currentSong.albumId ?? "", albumArtist: currentSong.albumArtist ?? "", indexNumber: currentSong.indexNumber, dateCreated: currentSong.dateCreated, parentIndexNumber: currentSong.ParentIndexNumber ?? 1, albumArtistId: currentSong.albumArtistObj[0].id ?? "", parrentId: currentSong.parentId ?? "")
-                        tempSongs.append(newSong ?? jellyfinItem(id: "", title: "", artist: [""], albumid: "", albumArtist: "", indexNumber: currentSong.indexNumber, dateCreated: "2019-08-24T14:15:22Z", parentIndexNumber: 1, albumArtistId: "", parrentId: "0"))
-                        print(newSong?.parentId)
+                        newSong = jellyfinItem(
+                            id: currentSong.Id,
+                            title: currentSong.Title,
+                            artist: currentSong.Artists,
+                            albumid: currentSong.albumId ?? "",
+                            albumArtist: currentSong.albumArtist ?? "",
+                            indexNumber: currentSong.indexNumber,
+                            dateCreated: currentSong.dateCreated,
+                            parentIndexNumber: currentSong.ParentIndexNumber ?? 1,
+                            albumArtistId: currentSong.albumArtistObj[0].id ?? "",
+                            parrentId: currentSong.parentId ?? "",
+                            premiereDate: currentSong.premiereDate ?? "\(Date.now)")
+                        
+                        tempSongs.append(newSong ?? jellyfinItem(
+                            id: "",
+                            title: "",
+                            artist: [""],
+                            albumid: "",
+                            albumArtist: "",
+                            indexNumber: currentSong.indexNumber,
+                            dateCreated: "2019-08-24T14:15:22Z",
+                            parentIndexNumber: 1, albumArtistId: "",
+                            parrentId: "0", premiereDate: "\(Date.now)"))
                     }
                     
                     self.currentPosition = self.currentPosition + self.amountOfLoadsAtSameTime

@@ -30,6 +30,7 @@ struct albumListView: View {
         case titleAscending = "Title"
         case artistAscending = "Artist"
         case dateCreated = "Date added"
+        case datePremiered = "Releasedate"
         
         var id: String { self.rawValue }
     }
@@ -51,6 +52,8 @@ struct albumListView: View {
             sorted = albums.sorted { $0.artist[0].lowercased() < $1.artist[0].lowercased() }
         case .dateCreated:
             sorted = albums.sorted { $0.dateCreated < $1.dateCreated }
+        case .datePremiered:
+            sorted = albums.sorted { $0.premiereDate < $1.premiereDate }
         }
         
         if searchText.isEmpty{
@@ -166,12 +169,11 @@ struct albumListView: View {
         var allSongs = [album]()
         
         for thisItem in jellyFinItems{
-            allSongs.append(album(id: thisItem.id, title: thisItem.title, artist: thisItem.artist ?? [], albumid: thisItem.albumId, albumArtist: thisItem.albumArtist, dateCreated: thisItem.dateCreated, albumArtistId: thisItem.albumArtistId, parentId: thisItem.parentId))
+            allSongs.append(album(id: thisItem.id, title: thisItem.title, artist: thisItem.artist ?? [], albumid: thisItem.albumId, albumArtist: thisItem.albumArtist, dateCreated: thisItem.dateCreated, albumArtistId: thisItem.albumArtistId, parentId: thisItem.parentId, premiereDate: thisItem.premiereDate))
 
         }
         
         for refreshedSong in allSongs{
-            print(refreshedSong.title)
             modelContext.insert(refreshedSong)
         }
         

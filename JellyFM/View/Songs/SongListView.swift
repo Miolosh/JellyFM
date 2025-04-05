@@ -35,6 +35,7 @@ struct SongListView: View {
         case titleAscending = "Title"
         case artistAscending = "Artist"
         case dateCreated = "Date added"
+        case releaseDate = "Releasedate"
         
         var id: String { self.rawValue }
     }
@@ -60,6 +61,8 @@ struct SongListView: View {
             sorted = songs.sorted { $0.artist[0].lowercased() < $1.artist[0].lowercased() }
         case .dateCreated:
             sorted = songs.sorted { $0.dateCreated < $1.dateCreated }
+        case .releaseDate:
+            sorted = songs.sorted { $0.premiereDate < $1.premiereDate }
         }
         
         if searchText.isEmpty{
@@ -163,7 +166,7 @@ struct SongListView: View {
     
     func increaseSongsInModel() {
         let allSongs = songList.songs.map { thisItem in
-            song(id: thisItem.id, title: thisItem.title, artist: thisItem.artist ?? [], albumid: thisItem.albumId, indexNumber: thisItem.indexNumber, dateCreated: thisItem.dateCreated, discNumber: thisItem.parentIndexNumber)
+            song(id: thisItem.id, title: thisItem.title, artist: thisItem.artist ?? [], albumid: thisItem.albumId, indexNumber: thisItem.indexNumber, dateCreated: thisItem.dateCreated, discNumber: thisItem.parentIndexNumber, premiereDate: thisItem.premiereDate)
         }
         allSongs.forEach { modelContext.insert($0) }
     }
