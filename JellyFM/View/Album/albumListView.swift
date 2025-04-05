@@ -17,6 +17,7 @@ struct albumListView: View {
     @StateObject private var songList:ItemAPI
     
     @State var songlistNeedReload = false
+    @State var searchText = ""
     
     // UserDefaults Keys
     enum UserDefaultsKeys {
@@ -42,7 +43,7 @@ struct albumListView: View {
     
     // Sorting Logic
     var sortedAlbums: [album] {
-        let sorted: [album]
+        var sorted: [album]
         switch sortingOption {
         case .titleAscending:
             sorted = albums.sorted { $0.title.lowercased() < $1.title.lowercased() }
@@ -51,6 +52,13 @@ struct albumListView: View {
         case .dateCreated:
             sorted = albums.sorted { $0.dateCreated < $1.dateCreated }
         }
+        
+        if searchText.isEmpty{
+            
+        }else{
+            sorted = sorted.filter { $0.title.lowercased().contains(searchText.lowercased())}
+        }
+        
         return ascendingOrder ? sorted : sorted.reversed()
     }
     
@@ -62,6 +70,8 @@ struct albumListView: View {
         
         VStack(alignment: .leading){
             List {
+                searchBar(searchText: $searchText)
+                
                 ForEach(sortedAlbums) { item in
                     albumView(listedAlbum: item, newUser: users[0])
                     }

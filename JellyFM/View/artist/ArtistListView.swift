@@ -17,6 +17,7 @@ struct artistListView: View {
     @StateObject private var songList:ItemAPI
     
     @State var songlistNeedReload = false
+    @State var searchText = ""
     
     // UserDefaults Keys
     enum UserDefaultsKeys {
@@ -41,13 +42,20 @@ struct artistListView: View {
     
     // Sorting Logic
     var sortedArtists: [artist] {
-        let sorted: [artist]
+        var sorted: [artist]
         switch sortingOption {
         case .nameAscending:
             sorted = artists.sorted { $0.name.lowercased() < $1.name.lowercased() }
         /*case .artistAscending:
             sorted = artists.sorted { $0.artistName[0].lowercased() < $1.artistName[0].lowercased() }*/
         }
+        
+        if searchText.isEmpty{
+            
+        }else{
+            sorted = sorted.filter { $0.name.lowercased().contains(searchText.lowercased())}
+        }
+        
         return ascendingOrder ? sorted : sorted.reversed()
     }
     
@@ -59,6 +67,8 @@ struct artistListView: View {
         
         VStack(alignment: .leading){
             List {
+                searchBar(searchText: $searchText)
+                
                 ForEach(sortedArtists) { item in
                     artistView(listedArtist: item, newUser: users[0])
                     }

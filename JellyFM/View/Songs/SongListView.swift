@@ -74,16 +74,7 @@ struct SongListView: View {
     var body: some View {
         VStack {
             List {
-                HStack {
-                    Image(systemName: "magnifyingglass") // Search icon
-                        .foregroundColor(.gray) // Icon color
-                    TextField("Search for a song...", text: $searchText)
-                        .textFieldStyle(PlainTextFieldStyle()) // Use PlainTextFieldStyle for better layout control
-                }
-                .padding(8)
-                .background(Color(.systemGray6)) // Add background color to mimic search bar style
-                .cornerRadius(8) // Rounded corner
-                .listRowSeparator(.hidden)
+                searchBar(searchText: $searchText)
                 
                 ForEach(Array(sortedSongs.enumerated()), id: \.element.id) { (index, item) in
                     Button(action: {
