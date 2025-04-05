@@ -52,11 +52,12 @@ struct SongView: View {
                 }
                 .frame(width: 48, height: 48)
                 .cornerRadius(5)
-                
+            
             }else{
                 if let indexNumber = listedSong.indexNumber{
                     Text("\(indexNumber).")
                         .padding(.trailing, 10)
+                    
                 }else{
                     Text("0.")
                         .padding(.trailing, 10)
@@ -67,10 +68,9 @@ struct SongView: View {
                 Text(listedSong.title)
                     .foregroundColor(Color.black)
                 
-                
                 Text(artists)
-                    .font(.subheadline)
-                    .foregroundColor(Color.gray)
+                        .font(.subheadline)
+                        .foregroundColor(Color.gray)
                 
             }
             

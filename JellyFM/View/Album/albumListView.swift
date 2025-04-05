@@ -29,7 +29,7 @@ struct albumListView: View {
     enum SortingOption: String, CaseIterable, Identifiable {
         case titleAscending = "Title"
         case artistAscending = "Artist"
-        case dateCreated = "Date created"
+        case dateCreated = "Date added"
         
         var id: String { self.rawValue }
     }
