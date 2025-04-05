@@ -15,8 +15,8 @@ struct AlbumSpecificView: View {
     @Query private var albums: [album]
     
     @State var playAlbumTapped = false
-    @State var playAlbumButtonCollor = Color.green.opacity(0.1)
-    @State var addQueueButtonCollor = Color.green.opacity(0.1)
+    @State var playAlbumButtonCollor = Color.white.opacity(0.2)
+    @State var addQueueButtonCollor = Color.white.opacity(0.2)
     
     
     var albumSongs: [song] {
@@ -76,77 +76,75 @@ struct AlbumSpecificView: View {
                             .foregroundColor(Color.gray)
                     }
                     
+                    HStack{
+                        Button(action: {
+                            playAlbumTapped = true
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1){
+                                playAlbumTapped = false
+                            }
+                            let impact = UIImpactFeedbackGenerator(style: .medium)
+                            impact.impactOccurred()
+                            
+                            withAnimation(.easeInOut(duration: 0.1)) { // Smooth transition over 1 second
+                                playAlbumButtonCollor = playAlbumButtonCollor == Color.white.opacity(0.2) ? Color.white.opacity(0.5) : Color.white.opacity(0.2)
+                            }
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { // Delay reset after animation
+                                withAnimation(.easeInOut(duration: 0.5)) {
+                                    playAlbumButtonCollor = playAlbumButtonCollor == Color.white.opacity(0.2) ? Color.white.opacity(0.5) : Color.white.opacity(0.2)
+                                }
+                            }
+                            
+                            MusicPlayer.shared.playSongAndQueue(queueNumber: 0, currentUser: users[0], queueList: albumSongs, allAlbums: albums)
+                        }){
+                            Text("Play album")
+                                .frame(width:150, height: 60)
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                        .background(playAlbumButtonCollor)
+                        .cornerRadius(15)
+                        .padding(5)
+                        
+                        
+                        Button(action: {
+                            let impact = UIImpactFeedbackGenerator(style: .medium)
+                            impact.impactOccurred()
+                            
+                            withAnimation(.easeInOut(duration: 0.1)) { // Smooth transition over 1 second
+                                addQueueButtonCollor = addQueueButtonCollor == Color.white.opacity(0.2) ? Color.white.opacity(0.5) : Color.white.opacity(0.2)
+                            }
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { // Delay reset after animation
+                                withAnimation(.easeInOut(duration: 0.5)) {
+                                    addQueueButtonCollor = addQueueButtonCollor == Color.white.opacity(0.2) ? Color.white.opacity(0.5) : Color.white.opacity(0.2)
+                                }
+                            }
+                            
+                            for songToAdd in albumSongs{
+                                MusicPlayer.shared.addSongToQueue(songToPlay: songToAdd, currentUser: users[0])
+                            }
+                            
+                            
+                            
+                        }){
+                            Text("Add to queue")
+                                .frame(width:150, height: 60)
+                            
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                        .background(addQueueButtonCollor)
+                        .cornerRadius(15)
+                        .padding(5)
+                        
+                    }
+                    .padding(20)
                    
                 }
+                
                 
             }
            
             .listRowSeparator(.hidden)
             .frame(maxWidth:.infinity)
-                HStack{
-                    Button(action: {
-                        playAlbumTapped = true
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1){
-                            playAlbumTapped = false
-                        }
-                        let impact = UIImpactFeedbackGenerator(style: .medium)
-                        impact.impactOccurred()
-                        
-                        withAnimation(.easeInOut(duration: 0.3)) { // Smooth transition over 1 second
-                            playAlbumButtonCollor = playAlbumButtonCollor == Color.green.opacity(0.1) ? Color.green.opacity(0.5) : Color.green.opacity(0.1)
-                        }
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { // Delay reset after animation
-                            withAnimation(.easeInOut(duration: 0.3)) {
-                                playAlbumButtonCollor = playAlbumButtonCollor == Color.green.opacity(0.1) ? Color.green.opacity(0.5) : Color.green.opacity(0.1)
-                            }
-                        }
-                        
-                        MusicPlayer.shared.playSongAndQueue(queueNumber: 0, currentUser: users[0], queueList: albumSongs, allAlbums: albums)
-                    }){
-                        Text("Play album")
-                            .frame(width:150, height: 60)
-                            .foregroundColor(Color.green)
-                    }
-                    .buttonStyle(PlainButtonStyle())
-                    .background(playAlbumButtonCollor)
-                    .cornerRadius(15)
-                    .padding(5)
-                    
-                    
-                    Button(action: {
-                        let impact = UIImpactFeedbackGenerator(style: .medium)
-                        impact.impactOccurred()
-                        
-                        withAnimation(.easeInOut(duration: 0.3)) { // Smooth transition over 1 second
-                            addQueueButtonCollor = addQueueButtonCollor == Color.green.opacity(0.1) ? Color.green.opacity(0.5) : Color.green.opacity(0.1)
-                        }
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { // Delay reset after animation
-                            withAnimation(.easeInOut(duration: 0.3)) {
-                                addQueueButtonCollor = addQueueButtonCollor == Color.green.opacity(0.1) ? Color.green.opacity(0.5) : Color.green.opacity(0.1)
-                            }
-                        }
-                        
-                        for songToAdd in albumSongs{
-                            MusicPlayer.shared.addSongToQueue(songToPlay: songToAdd, currentUser: users[0])
-                        }
-                        
-                        
-                        
-                    }){
-                        Text("Add to queue")
-                            .frame(width:150, height: 60)
-                            .foregroundColor(Color.green)
-                        
-                    }
-                    .buttonStyle(PlainButtonStyle())
-                    .background(addQueueButtonCollor)
-                    .cornerRadius(15)
-                    .padding(5)
-                    
-                }
-            
-            .listRowSeparator(.hidden)
-            .frame(maxWidth:.infinity)
+                
             
             ForEach(Array(albumSongs.enumerated()), id: \.element.id) { (index, item) in
                 Button(action: {
