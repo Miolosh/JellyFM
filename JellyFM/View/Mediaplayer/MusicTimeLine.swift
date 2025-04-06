@@ -52,8 +52,10 @@ struct MusicTimeLine: View {
     }
     
     func getFullTime() -> String{
-        let total = musicPlayer.player.currentItem?.duration.seconds
-        if total!.isNaN{
+        let total = musicPlayer.player.currentItem?.duration.seconds ?? -1
+        if total < 0{
+            return "NAN"
+        }else if total.isNaN{
             return "NAN"
         }
         
