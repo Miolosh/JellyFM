@@ -86,6 +86,11 @@ class queueObject: ObservableObject{
         }
     }
     
+    func deleteSongFromQueue(at index: Int) -> Void{
+        queueOfSongs.remove(at: index)
+        MusicPlayer.shared.deleteAllItemsExceptCurrentPlay()
+    }
+    
     func returnCurrentSong() -> song{
         return queueOfSongs[currentQueuePosition]
     }
@@ -110,7 +115,7 @@ class queueObject: ObservableObject{
             print("position of queue was too large")
             return
         }
-        return 
+        return
     }
     
     

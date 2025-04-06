@@ -53,9 +53,18 @@ struct QueueOfSongs: View {
                     Text("Upcomming songs")
                         .font(.headline)
                         .listRowSeparator(.hidden)
-                    ForEach (musicPlayer.queue.queueOfSongs.indices){ index in
-                        if musicPlayer.queue.currentQueuePosition < index{
+                    
+                    ForEach (musicPlayer.queue.queueOfSongs, id: \.self){ song in
+                        if let index = musicPlayer.queue.queueOfSongs.firstIndex(of: song),
+                               musicPlayer.queue.currentQueuePosition < index {
                             SongView(listedSong: musicPlayer.queue.queueOfSongs[index],newUser: musicPlayer.activeUser!)
+                                .swipeActions(edge: .trailing){
+                                    Button(role: .destructive){
+                                        MusicPlayer.shared.queue.deleteSongFromQueue(at: index)
+                                    } label: {
+                                        Label("Remove", systemImage: "trash")
+                                    }
+                                }
                         }
                     }
                     
