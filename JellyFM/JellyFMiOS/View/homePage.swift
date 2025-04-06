@@ -49,6 +49,14 @@ struct homePage: View {
                             }
                         }
                         NavigationLink {
+                            playlistListView()
+                        } label: {
+                            HStack {
+                                Image(systemName: "rectangle.stack").foregroundColor(Color.green)
+                                Text("Playlists")
+                            }
+                        }
+                        NavigationLink {
                             artistListView()
                         } label: {
                             HStack {

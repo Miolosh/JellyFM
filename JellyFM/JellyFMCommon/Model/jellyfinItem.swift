@@ -72,7 +72,7 @@ struct APISong: Codable{
     let indexNumber: Int?
     let dateCreated: String
     let ParentIndexNumber: Int?
-    let albumArtistObj: [albumArtist]
+    let albumArtistObj: [albumArtist]?
     let parentId: String?
     let premiereDate: String?
     

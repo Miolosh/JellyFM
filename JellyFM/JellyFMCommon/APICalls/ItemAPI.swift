@@ -53,7 +53,19 @@ class ItemAPI: ObservableObject{
                     if data.items.count == 0{
                         return
                     }
+                    
+                    
+                    
                     for currentSong in data.items {
+                        
+                        let albumArtistObj = currentSong.albumArtistObj ?? []
+                        var albumArtist = ""
+                        if albumArtistObj.count == 0{
+                            albumArtist = "didNotFind"
+                        }else{
+                            albumArtist = albumArtistObj[0].id
+                        }
+                        
                         newSong = jellyfinItem(
                             id: currentSong.Id,
                             title: currentSong.Title,
@@ -63,7 +75,7 @@ class ItemAPI: ObservableObject{
                             indexNumber: currentSong.indexNumber,
                             dateCreated: currentSong.dateCreated,
                             parentIndexNumber: currentSong.ParentIndexNumber ?? 1,
-                            albumArtistId: currentSong.albumArtistObj[0].id ?? "",
+                            albumArtistId: albumArtist,
                             parrentId: currentSong.parentId ?? "",
                             premiereDate: currentSong.premiereDate ?? "\(Date.now)")
                         

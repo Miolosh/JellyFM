@@ -16,7 +16,8 @@ struct My_Own_MediaplayerApp: App {
             song.self,
             album.self,
             jellyfinItem.self,
-            artist.self
+            artist.self,
+            playlist.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
