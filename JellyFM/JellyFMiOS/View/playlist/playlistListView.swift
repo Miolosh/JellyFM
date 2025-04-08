@@ -80,6 +80,9 @@ struct playlistListView: View {
                 ForEach(sortedLists) { item in
                     playlistView(listedPlaylist: item, newUser: users[0])
                     }
+                NavigationLink(destination: TestView()){
+                    Text("hahaha")
+                }
                 HStack{
                     Spacer()
                     Image("InAppIcon")

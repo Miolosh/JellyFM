@@ -21,3 +21,12 @@ final class playlist{
         self.name = name
     }
 }
+
+struct playlistItems: Codable{
+    let songIds: [String]?
+    
+    enum CodingKeys: String, CodingKey {
+        case songIds = "ItemIds"
+        
+    }
+}

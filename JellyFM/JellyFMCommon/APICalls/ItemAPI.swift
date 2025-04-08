@@ -19,6 +19,7 @@ class ItemAPI: ObservableObject{
     @Published var currentPosition = 0
     let sortBy = "Title"
     @Published var lastIncrement = Date() //indicate the increment (second function is used)
+    @Published var songIdsFromPlaylist: [String] = []
     
     //Songs and albums
     
@@ -167,6 +168,34 @@ class ItemAPI: ObservableObject{
                     print(response)
                     break
                 }
+            }
+    }
+    
+    public func getPlaylistItems(user: user, playlistId: String){
+        var result: [String] = []
+        let usedServerAdress = user.serverIP
+        
+        let headers: HTTPHeaders = [
+            "Authorization": "MediaBrowser Token=\(user.token)"
+        ]
+        
+        
+        let systemURL = "\(usedServerAdress)/Playlists/\(playlistId)"
+        
+        AF.request(systemURL, method: .get,  headers: headers)
+            .responseDecodable(of: playlistItems.self) {response in
+                
+                switch response.result {
+                case .success(let data):
+                    result = data.songIds ?? []
+                    self.songIdsFromPlaylist = result
+                    break
+                case .failure(let error):
+                    print(error)
+                    print(response)
+                    break
+                }
+                
             }
     }
     

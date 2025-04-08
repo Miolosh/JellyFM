@@ -27,7 +27,7 @@ struct playlistView: View {
     var body: some View {
         
         
-        NavigationLink(destination: playlistListView()) {
+        NavigationLink(destination: playlistSpecificView(selectedPlaylist: listedPlaylist)) {
             HStack{
                 AsyncImage(url: URL(string: "\(currentUser.serverIP)/Items/\(listedPlaylist.id)/Images/Primary?fillHeight=64&fillWidth=64&quality=96&tag=726197babb87ba7515d495fad56d81ed")) { image in
                     image.resizable()
