@@ -141,7 +141,8 @@ struct playlistSpecificView: View {
                 Button(action: {
                     MusicPlayer.shared.playSongAndQueue(queueNumber: index, currentUser: users[0], queueList: selectedPlaylist.songs, allAlbums: albums)
                 }) {
-                    SongView(listedSong: item, newUser: users[0], withAlbumArt: false)
+                    SongView(listedSong: item, newUser: users[0], withAlbumArt: true)
+                        
                 }
                 .swipeActions(edge: .leading, allowsFullSwipe: true) {
                     Button {
@@ -173,17 +174,22 @@ struct playlistSpecificView: View {
         .onReceive(APICalls.$songIdsFromPlaylist){newSong in
             applyChanges(newSong: newSong)
         }
+        .onDisappear(){
+            for song in selectedPlaylist.songs{
+                print(song.title)
+            }
+        }
         
        
     }
     
     private func applyChanges(newSong: [String]){
         
+        print("bhaaa")
         
         let predicate = #Predicate<song> { song in
             newSong.contains(song.id)
         }
-        
         
         do{
             let filteredSongs = try modelContext.fetch(FetchDescriptor<song>(predicate: predicate))
@@ -191,13 +197,43 @@ struct playlistSpecificView: View {
                 return
             }
             
-            selectedPlaylist.songs = filteredSongs
-        
+            if !(checkSonglistHasChanged(newSong: newSong)){
+                return print("songlist has not changed")
+            }
+            
+            var tempSongs = [] as [song]
+            for songId in newSong{
+                var songToAdd = filteredSongs.first(where: {$0.id == songId})
+                if songToAdd == nil{
+                    continue
+                }
+                tempSongs.append(songToAdd!)
+            }
+            
+            selectedPlaylist.songs = tempSongs
+            print("selection changed")
          
         }catch{
             print("error")
         }
     
+    }
+    
+    func checkSonglistHasChanged(newSong: [String]) -> Bool{
+        var i = 0
+        if selectedPlaylist.songs.count > 0 && selectedPlaylist.songs.count == newSong.count{
+            for songToCheck in newSong{
+                if songToCheck == selectedPlaylist.songs[i].id{
+                    i += 1
+                    continue
+                }else{
+                    return true
+                }
+            }
+        }else{
+            return true
+        }
+        return false
     }
 }
 

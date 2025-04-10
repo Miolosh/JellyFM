@@ -14,6 +14,7 @@ struct homePage: View {
     @Query private var users: [user]
     @Query private var albums: [album]
     
+    
     @State var showSettings: Bool = false
     
     // Define a grid layout with two columns
@@ -27,7 +28,7 @@ struct homePage: View {
             if users.isEmpty {
                 ContentView()
             } else {
-                NavigationView {
+                NavigationStack {
                     
                     List {
                         // Top navigation links
@@ -52,7 +53,7 @@ struct homePage: View {
                             playlistListView()
                         } label: {
                             HStack {
-                                Image(systemName: "rectangle.stack").foregroundColor(Color.green)
+                                Image(systemName: "music.note.list").foregroundColor(Color.green)
                                 Text("Playlists")
                             }
                         }

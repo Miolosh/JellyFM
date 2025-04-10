@@ -189,6 +189,7 @@ class ItemAPI: ObservableObject{
                 case .success(let data):
                     result = data.songIds ?? []
                     self.songIdsFromPlaylist = result
+                    print(result)
                     break
                 case .failure(let error):
                     print(error)
