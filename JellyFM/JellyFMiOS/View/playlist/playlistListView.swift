@@ -168,7 +168,7 @@ struct playlistListView: View {
     
     //is called when a second loop has been gone through
     func increaseAlbumsInModel(){
-        var jellyFinItems = songList.songs
+        let jellyFinItems = songList.songs
         var allSongs = [playlist]()
         
         for thisItem in jellyFinItems{

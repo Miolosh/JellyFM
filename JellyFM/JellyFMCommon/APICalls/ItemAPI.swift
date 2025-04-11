@@ -206,7 +206,6 @@ class ItemAPI: ObservableObject{
             
         ]
         
-        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"]!
         
         let headers: HTTPHeaders = [
             "Authorization": "MediaBrowser Token=\(currentUser.token)"

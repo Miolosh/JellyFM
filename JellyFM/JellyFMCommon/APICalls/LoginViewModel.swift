@@ -85,7 +85,7 @@ class LoginViewModel: ObservableObject{
         AF.request(authURL, method: .post, encoding: JSONEncoding.default, headers: headers)
             .response{response in
                 switch response.result {
-                case .success(let value):
+                case .success(_):
                     print("finished")
                     
                 case .failure(_):
