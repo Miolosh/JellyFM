@@ -89,7 +89,7 @@ struct playlistListView: View {
                     Spacer()
                 }
                 .listRowSeparator(.hidden)
-            }.navigationTitle("Albums")
+            }.navigationTitle("Playlists")
                 .listStyle(.inset)
 #if os(iOS)
                 .toolbar {

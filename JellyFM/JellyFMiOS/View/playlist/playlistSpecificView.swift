@@ -153,6 +153,15 @@ struct playlistSpecificView: View {
                     }
                     .tint(.green)
                 }
+                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                    Button {
+                        APICalls.deleteSongFromPlaylist(currentUser: users[0], playlistId: selectedPlaylist.id, songId: item.id)
+                        songList.remove(at: index)
+                    } label: {
+                        Label("delete", systemImage: "music.note.list")
+                    }
+                    .tint(.red)
+                }
                 
                 
             }

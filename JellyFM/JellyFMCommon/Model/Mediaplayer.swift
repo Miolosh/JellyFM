@@ -15,8 +15,9 @@ class MusicPlayer: ObservableObject {
     
     static let shared = MusicPlayer()
     
-    var player: AVQueuePlayer = AVQueuePlayer()
+    let clientName = "JellyFM"
     
+    var player: AVQueuePlayer = AVQueuePlayer()
     
     var playlistEnded = false
     var activeUser: user?
