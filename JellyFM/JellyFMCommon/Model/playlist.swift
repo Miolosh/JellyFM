@@ -12,7 +12,7 @@ import SwiftData
 final class playlist{
     
     @Attribute(.unique) var id: String
-    var songs: [song] = []
+    @Relationship var songs: [String] = []
     var name: String = ""
     
     
@@ -20,6 +20,7 @@ final class playlist{
         self.id = id
         self.name = name
     }
+    
 }
 
 struct playlistItems: Codable{

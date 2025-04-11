@@ -23,7 +23,8 @@ struct playlistSpecificView: View {
     @StateObject private var APICalls:ItemAPI
     
     
-    var selectedPlaylist: playlist
+    @State var selectedPlaylist: playlist
+    @State var songList: [song] = []
     
     init(selectedPlaylist: playlist) {
         _APICalls = StateObject(wrappedValue: ItemAPI())
@@ -85,9 +86,9 @@ struct playlistSpecificView: View {
                                 }
                             }
                             
-                            MusicPlayer.shared.playSongAndQueue(queueNumber: 0, currentUser: users[0], queueList: selectedPlaylist.songs, allAlbums: albums)
+                            MusicPlayer.shared.playSongAndQueue(queueNumber: 0, currentUser: users[0], queueList: songList, allAlbums: albums)
                         }){
-                            Text("Play album")
+                            Text("Play playlist")
                                 .frame(width:150, height: 60)
                         }
                         .buttonStyle(PlainButtonStyle())
@@ -109,7 +110,7 @@ struct playlistSpecificView: View {
                                 }
                             }
                             
-                            for songToAdd in selectedPlaylist.songs{
+                            for songToAdd in songList{
                                 MusicPlayer.shared.addSongToQueue(songToPlay: songToAdd, currentUser: users[0])
                             }
                             
@@ -137,9 +138,9 @@ struct playlistSpecificView: View {
             .frame(maxWidth:.infinity)
                 
             
-            ForEach(Array(selectedPlaylist.songs.enumerated()), id: \.element.id) { (index, item) in
+            ForEach(Array(songList.enumerated()), id: \.element.id) { (index, item) in
                 Button(action: {
-                    MusicPlayer.shared.playSongAndQueue(queueNumber: index, currentUser: users[0], queueList: selectedPlaylist.songs, allAlbums: albums)
+                    MusicPlayer.shared.playSongAndQueue(queueNumber: index, currentUser: users[0], queueList: songList, allAlbums: albums)
                 }) {
                     SongView(listedSong: item, newUser: users[0], withAlbumArt: true)
                         
@@ -152,6 +153,8 @@ struct playlistSpecificView: View {
                     }
                     .tint(.green)
                 }
+                
+                
             }
             HStack{
                 Spacer()
@@ -168,51 +171,44 @@ struct playlistSpecificView: View {
         
         
         .onAppear(){
+            applyChanges(newSong: selectedPlaylist.songs)
             APICalls.getPlaylistItems(user: users[0], playlistId: selectedPlaylist.id)
         }
         
         .onReceive(APICalls.$songIdsFromPlaylist){newSong in
             applyChanges(newSong: newSong)
         }
-        .onDisappear(){
-            for song in selectedPlaylist.songs{
-                print(song.title)
-            }
-        }
+        
         
        
     }
     
     private func applyChanges(newSong: [String]){
         
-        print("bhaaa")
+        selectedPlaylist.songs = newSong
         
         let predicate = #Predicate<song> { song in
             newSong.contains(song.id)
         }
-        
+                
         do{
             let filteredSongs = try modelContext.fetch(FetchDescriptor<song>(predicate: predicate))
             if filteredSongs.count == 0{
                 return
             }
             
-            if !(checkSonglistHasChanged(newSong: newSong)){
-                return print("songlist has not changed")
-            }
-            
             var tempSongs = [] as [song]
             for songId in newSong{
-                var songToAdd = filteredSongs.first(where: {$0.id == songId})
+                let songToAdd = filteredSongs.first(where: {$0.id == songId})
                 if songToAdd == nil{
                     continue
                 }
                 tempSongs.append(songToAdd!)
             }
             
-            selectedPlaylist.songs = tempSongs
-            print("selection changed")
-         
+            songList = tempSongs
+            
+            
         }catch{
             print("error")
         }
@@ -221,9 +217,9 @@ struct playlistSpecificView: View {
     
     func checkSonglistHasChanged(newSong: [String]) -> Bool{
         var i = 0
-        if selectedPlaylist.songs.count > 0 && selectedPlaylist.songs.count == newSong.count{
+        if songList.count > 0 && songList.count == newSong.count{
             for songToCheck in newSong{
-                if songToCheck == selectedPlaylist.songs[i].id{
+                if songToCheck == songList[i].id{
                     i += 1
                     continue
                 }else{
