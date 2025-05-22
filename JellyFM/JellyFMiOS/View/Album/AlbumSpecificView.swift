@@ -153,12 +153,8 @@ struct AlbumSpecificView: View {
                     SongView(listedSong: item, newUser: users[0], withAlbumArt: false)
                 }
                 .swipeActions(edge: .leading, allowsFullSwipe: true) {
-                    Button {
-                        MusicPlayer.shared.addSongToQueue(songToPlay: item, currentUser: users[0])
-                    } label: {
-                        Label("Add to queue", systemImage: "music.note.list")
-                    }
-                    .tint(.green)
+                    addToQueueButton(currentUser: users[0], songToPlay: item)
+                    addToTopQueueButton(songToPlay: item, currentUser: users[0])
                 }
             }
             HStack{

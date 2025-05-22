@@ -146,12 +146,8 @@ struct playlistSpecificView: View {
                         
                 }
                 .swipeActions(edge: .leading, allowsFullSwipe: true) {
-                    Button {
-                        MusicPlayer.shared.addSongToQueue(songToPlay: item, currentUser: users[0])
-                    } label: {
-                        Label("Add to queue", systemImage: "music.note.list")
-                    }
-                    .tint(.green)
+                    addToQueueButton(currentUser: users[0], songToPlay: item)
+                    addToTopQueueButton(songToPlay: item, currentUser: users[0])
                 }
                 .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                     Button {
