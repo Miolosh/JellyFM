@@ -227,4 +227,32 @@ class ItemAPI: ObservableObject{
             }
     }
     
+    func addSongToPlaylist(currentUser: user, playlistId: String, songId: String){
+        let authURL = "\(currentUser.serverIP)/Playlists/\(playlistId)/Items"
+        let codings: [String: Any] = [
+            "entryIds": songId
+            
+        ]
+        
+        
+        let headers: HTTPHeaders = [
+            "Authorization": "MediaBrowser Token=\(currentUser.token)"
+        ]
+        
+        AF.request(authURL, method: .post, parameters: codings, encoding: URLEncoding.default, headers: headers)
+            .response { response in
+                print("Status code: \(response.response?.statusCode ?? 0)")
+                        
+                        if let data = response.data, let body = String(data: data, encoding: .utf8) {
+                            print("Response body: \(body)")
+                        }
+                
+                if let error = response.error {
+                    print("Request failed: \(error)")
+                } else {
+                    print("Successfully removed song from playlist.")
+                }
+            }
+    }
+    
 }

@@ -17,6 +17,10 @@ struct SongView: View {
     var artists = ""
     var withAlbumArt: Bool = true
     
+    @State private var isPlaylistSheetShown = false
+    
+    @StateObject private var APICalls: ItemAPI
+    
     
     
     init(listedSong: song, artists: String = "", newUser: user, withAlbumArt: Bool = true) {
@@ -24,6 +28,7 @@ struct SongView: View {
         self.artists = artists
         self.currentUser = newUser
         self.withAlbumArt = withAlbumArt
+        _APICalls = StateObject(wrappedValue: ItemAPI())
         
         
         var i = 1
@@ -36,6 +41,7 @@ struct SongView: View {
             }
             i += 1
         }
+        
     }
     
     var body: some View {
@@ -73,10 +79,29 @@ struct SongView: View {
                         .foregroundColor(Color.gray)
                 
             }
-            
+            Spacer()
+            Menu {
+                Button("Edit") {
+                    isPlaylistSheetShown = true
+                }
+                Button("Delete") {
+                    print("Delete tapped")
+                }
+            } label: {
+                Image(systemName: "ellipsis.circle")
+                    .resizable()
+                    .frame(width:23, height:23)
+                    .foregroundColor(.green)
+                
+            }
+
             
         }
+        .sheet(isPresented: $isPlaylistSheetShown){
+            ChoosePlaylist(songId: listedSong.id)
+        }
     }
+       
     
     
     
