@@ -246,6 +246,13 @@ class MusicPlayer: ObservableObject {
             }
         }
         
+        preloadSongs()
+        
+        #endif
+
+    }
+    
+    func preloadSongs(){
         let amountToPreload = 10
         if player.items().count < amountToPreload {
             let newSongs = queue.getNextItems(from: player.items().count, to: amountToPreload)
@@ -253,9 +260,6 @@ class MusicPlayer: ObservableObject {
                 addSongToAVQueuePlayer(songToPlay: newsong, currentUser: activeUser!)
             }
         }
-        
-        #endif
-
     }
 
 #if os(iOS)
@@ -305,6 +309,7 @@ class MusicPlayer: ObservableObject {
             createArtistString(currentSong: queue.returnCurrentSong())
             updateNowPlayingInfo()
             player.seek(to: .zero)
+            player.play()
         } else {
             guard let currentItem = player.currentItem else { return }
                 

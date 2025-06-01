@@ -87,7 +87,7 @@ class queueObject: ObservableObject{
     }
     
     func addSongToTopOfQueue(songToAdd: song, currentUser: user){
-        if queueOfSongs.count < 0 {
+        if queueOfSongs.count <= 0 {
             startNewQueue(newQueue: [songToAdd])
             MusicPlayer.shared.addSongToQueue(songToPlay: songToAdd, currentUser: currentUser)
             return
@@ -102,6 +102,10 @@ class queueObject: ObservableObject{
         newQueue = firstPart + [songToAdd] + lastPart
         queueOfSongs = newQueue
         MusicPlayer.shared.deleteAllItemsExceptCurrentPlay()
+        if MusicPlayer.shared.player.items().count == 0{
+            currentQueuePosition += 1
+        }
+        MusicPlayer.shared.preloadSongs()
     }
     
     func deleteSongFromQueue(at index: Int) -> Void{
