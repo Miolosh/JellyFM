@@ -59,7 +59,10 @@ struct albumListView: View {
         if searchText.isEmpty{
             
         }else{
-            sorted = sorted.filter { $0.title.lowercased().contains(searchText.lowercased())}
+            sorted = sorted.filter { song in
+                song.title.lowercased().contains(searchText.lowercased()) ||
+                song.artist.contains(where: { $0.lowercased().contains(searchText.lowercased())})
+            }
         }
         
         return ascendingOrder ? sorted : sorted.reversed()
