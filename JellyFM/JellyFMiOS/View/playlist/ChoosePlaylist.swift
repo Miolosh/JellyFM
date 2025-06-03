@@ -19,7 +19,7 @@ struct ChoosePlaylist: View {
     @State var songlistNeedReload = false
     @State var searchText = ""
     
-    var songID: String
+    var currentSong: song
     
     // UserDefaults Keys
     enum UserDefaultsKeys {
@@ -69,22 +69,51 @@ struct ChoosePlaylist: View {
         
     }
     
-    init(songId: String) {
+    init(song: song) {
         _songList = StateObject(wrappedValue: ItemAPI())
-        self.songID = songId
+        self.currentSong = song
     }
     
     var body: some View {
         
         VStack(alignment: .leading){
-            List {
+            HStack{
+                Spacer()
                 Text("Add song to playlist")
                     .font(.headline)
+                    .padding(20)
+                Spacer()
+            }
+            
+            HStack{
+                Spacer()
+                AsyncImage(url: MusicPlayer.shared.albumArtUrl(listedSong: currentSong, size: 64)) { image in
+                    image.resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width:64, height: 64)
+                        .cornerRadius(10)
+                } placeholder: {
+                    Image("InAppIcon")
+                        .resizable()
+                        .frame(width: 64, height: 64)
+                }
+                Spacer()
+            }
+            
+            HStack{
+                Spacer()
+                Text(currentSong.title)
+                    .foregroundColor(Color.black)
+                Spacer()
+            }
+            
+            List {
+                
                 searchBar(searchText: $searchText)
                 
                 ForEach(sortedLists) { item in
                     Button(action:{
-                        addToPlayList(songToAdd: songID, playlistToAddTo: item)
+                        addToPlayList(songToAdd: currentSong.id, playlistToAddTo: item)
                     })
                     {
                         //the false makes the list look pale
@@ -102,7 +131,6 @@ struct ChoosePlaylist: View {
                 }
                 .listRowSeparator(.hidden)
             }
-            .navigationTitle("Choose playlist")
             .listStyle(.inset)
         }
     }

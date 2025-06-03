@@ -98,7 +98,7 @@ struct SongView: View {
             
         }
         .sheet(isPresented: $isPlaylistSheetShown){
-            ChoosePlaylist(songId: listedSong.id)
+            ChoosePlaylist(song: listedSong)
         }
     }
        
