@@ -228,21 +228,22 @@ class ItemAPI: ObservableObject{
     }
     
     func addSongToPlaylist(currentUser: user, playlistId: String, songId: String){
-        let authURL = "\(currentUser.serverIP)/Playlists/\(playlistId)/Items"
+        var authURL = "\(currentUser.serverIP)/Playlists/\(playlistId)/Items"
         let codings: [String: Any] = [
-            "entryIds": songId
-            
+            "ids": songId,
+            "userId": currentUser.userId
+            //Codinsgs does not work in .post. I do not know why, but it does not.
         ]
         
-        
+        authURL = authURL + "?ids=\(songId)&userId=\(currentUser.userId)"
         let headers: HTTPHeaders = [
-            "Authorization": "MediaBrowser Token=\(currentUser.token)"
+            "Authorization": "MediaBrowser Token=\(currentUser.token)",
+            "Content-Type": "application/json"
         ]
         
         AF.request(authURL, method: .post, parameters: codings, encoding: URLEncoding.default, headers: headers)
             .response { response in
                 print("Status code: \(response.response?.statusCode ?? 0)")
-                        
                         if let data = response.data, let body = String(data: data, encoding: .utf8) {
                             print("Response body: \(body)")
                         }
@@ -250,7 +251,7 @@ class ItemAPI: ObservableObject{
                 if let error = response.error {
                     print("Request failed: \(error)")
                 } else {
-                    print("Successfully removed song from playlist.")
+                    print("Successfully added song from playlist.")
                 }
             }
     }

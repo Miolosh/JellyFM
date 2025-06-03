@@ -81,7 +81,7 @@ struct SongView: View {
             }
             Spacer()
             Menu {
-                Button("Edit") {
+                Button("Add to playlist") {
                     isPlaylistSheetShown = true
                 }
                 Button("Delete") {

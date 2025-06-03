@@ -78,13 +78,16 @@ struct ChoosePlaylist: View {
         
         VStack(alignment: .leading){
             List {
+                Text("Add song to playlist")
+                    .font(.headline)
                 searchBar(searchText: $searchText)
                 
                 ForEach(sortedLists) { item in
                     Button(action:{
-                        print("hallo")
+                        addToPlayList(songToAdd: songID, playlistToAddTo: item)
                     })
                     {
+                        //the false makes the list look pale
                         playlistView(listedPlaylist: item, newUser: users[0], isNavigationLink: false)
                     }
                     
@@ -102,6 +105,11 @@ struct ChoosePlaylist: View {
             .navigationTitle("Choose playlist")
             .listStyle(.inset)
         }
+    }
+    
+    func addToPlayList(songToAdd: String, playlistToAddTo: playlist){
+        songList.addSongToPlaylist(currentUser: users[0], playlistId: playlistToAddTo.id, songId: songToAdd)
+        
     }
 
 }
