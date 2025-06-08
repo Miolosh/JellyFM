@@ -19,6 +19,8 @@ struct playlistListView: View {
     @State var songlistNeedReload = false
     @State var searchText = ""
     
+    @State var reloadRequired = false
+    
     // UserDefaults Keys
     enum UserDefaultsKeys {
         static let sortingOption = "sortingOption"
@@ -79,6 +81,14 @@ struct playlistListView: View {
                 
                 ForEach(sortedLists) { item in
                     playlistView(listedPlaylist: item, newUser: users[0])
+                        .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                            Button {
+                                deletePlaylist(listedPlaylist: item)
+                            } label: {
+                                Label("Delete playlist", systemImage: "trash")
+                            }
+                            .tint(.red)
+                        }
                     }
                 
                 HStack{
@@ -93,7 +103,7 @@ struct playlistListView: View {
                 .listStyle(.inset)
 #if os(iOS)
                 .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
+                    ToolbarItem() {
                         Button {
                             ascendingOrder.toggle()
                             UserDefaults.standard.set(ascendingOrder, forKey: UserDefaultsKeys.ascendingOrder)
@@ -101,7 +111,7 @@ struct playlistListView: View {
                             Label("Sort", systemImage: ascendingOrder ? "arrow.up" : "arrow.down")
                         }
                     }
-                    ToolbarItem(placement: .navigationBarTrailing) {
+                    ToolbarItem() {
                         Menu {
                             ForEach(SortingOption.allCases) { option in
                                 Button(action: {
@@ -120,7 +130,18 @@ struct playlistListView: View {
                             Label("Sort", systemImage: "arrow.up.arrow.down")
                         }
                     }
+                    ToolbarItem() {
+                        Button{
+                            createNewPlaylist()
+                        } label: {
+                            Label("Sort", systemImage: "plus")
+                                .font(.system(size: 30))
+                                .imageScale(.large)
+                        }
+                    }
+                        
                 }
+                    
 #endif
         }
         .refreshable {
@@ -141,6 +162,13 @@ struct playlistListView: View {
             self.songlistNeedReload = true
         
         }
+        .onReceive(songList.$APIShouldBeRecalled){newState in
+            if reloadRequired{
+                resetAlbums(initial: true)
+                reloadRequired = false
+            }
+        
+        }
         .onReceive(songList.$lastIncrement){newSong in //lastIncrement is used since this is only updated if a load has occured and is not reset.
             if (songList.currentPosition != 0){
                 loadAlbumsInModel(deletion: false)
@@ -153,6 +181,7 @@ struct playlistListView: View {
     func resetAlbums(initial: Bool){
         if initial{
             songList.checkSongs(searchType: "Playlist", user: users[0])
+            print("bhahaa")
         }else{
             songList.increaseLoadedSongs(searchType: "Playlist", user: users[0])
         }
@@ -164,6 +193,17 @@ struct playlistListView: View {
             deleteSongs()
         }
         increaseAlbumsInModel()
+    }
+    
+    func createNewPlaylist(){
+        reloadRequired = true
+        songList.addNewPlaylist(currentUser: users[0])
+    }
+    
+    func deletePlaylist(listedPlaylist: playlist){
+        songList.deletePlaylist(playlistId: listedPlaylist.id, currentUser: users[0])
+        modelContext.delete(listedPlaylist)
+        
     }
     
     //is called when a second loop has been gone through

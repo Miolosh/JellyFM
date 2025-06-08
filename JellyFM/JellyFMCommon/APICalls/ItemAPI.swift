@@ -21,6 +21,8 @@ class ItemAPI: ObservableObject{
     @Published var lastIncrement = Date() //indicate the increment (second function is used)
     @Published var songIdsFromPlaylist: [String] = []
     
+    @Published var APIShouldBeRecalled = false
+    
     //Songs and albums
     
     public func checkSongs(searchType: String, user: user) -> Void{
@@ -253,6 +255,67 @@ class ItemAPI: ObservableObject{
                 } else {
                     print("Successfully added song from playlist.")
                 }
+            }
+    }
+    
+    func deletePlaylist(playlistId: String, currentUser: user){
+        let authURL = "\(currentUser.serverIP)/Items/\(playlistId)"
+        let codings: [String: Any] = [
+            "entryIds": playlistId
+            
+        ]
+        
+        
+        let headers: HTTPHeaders = [
+            "Authorization": "MediaBrowser Token=\(currentUser.token)"
+        ]
+        
+        AF.request(authURL, method: .delete, parameters: codings, encoding: URLEncoding.default, headers: headers)
+            .response { response in
+                print("Status code: \(response.response?.statusCode ?? 0)")
+                        
+                        if let data = response.data, let body = String(data: data, encoding: .utf8) {
+                            print("Response body: \(body)")
+                        }
+                
+                if let error = response.error {
+                    print("Request failed: \(error)")
+                } else {
+                    print("Successfully removed song from playlist.")
+                }
+            }
+    }
+    
+    func addNewPlaylist(currentUser: user){
+        APIShouldBeRecalled = false
+        let authURL = "\(currentUser.serverIP)/Playlists"
+        let codings: [String: Any] = [
+            "Ids": ["6666c4779a553b40f3488fab9d0a2170"],
+            "IsPublic": false,
+            "Name": "TestPlayList",
+            "UserId": "\(currentUser.userId)"
+        ]
+        print(codings)
+        
+        let headers: HTTPHeaders = [
+            "Authorization": "MediaBrowser Token=\(currentUser.token)"
+        ]
+        
+        AF.request(authURL, method: .post, parameters: codings, encoding: JSONEncoding.default, headers: headers)
+            .response { response in
+                print("Status code: \(response.response?.statusCode ?? 0)")
+                        
+                        if let data = response.data, let body = String(data: data, encoding: .utf8) {
+                            print("Response body: \(body)")
+                        }
+                
+                if let error = response.error {
+                    print("Request failed: \(error)")
+                } else {
+                    print("Successfully removed song from playlist.")
+                }
+                self.APIShouldBeRecalled = true
+                print(self.APIShouldBeRecalled)
             }
     }
     

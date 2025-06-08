@@ -16,12 +16,12 @@ struct playlistView: View {
     var listedPlaylist: playlist
     var isNavigationLink: Bool = true
     
+    @StateObject private var songList: ItemAPI
     
     init(listedPlaylist: playlist, newUser: user, isNavigationLink: Bool = true) {
         self.listedPlaylist = listedPlaylist
         self.currentUser = newUser
-        
-        
+        _songList = StateObject(wrappedValue: ItemAPI())
         
     }
     

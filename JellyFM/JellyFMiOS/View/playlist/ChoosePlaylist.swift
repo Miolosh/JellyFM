@@ -11,6 +11,7 @@ import SwiftData
 struct ChoosePlaylist: View {
     
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.dismiss) var dismiss
     @Query private var users: [user]
     @Query private var playlists: [playlist]
     
@@ -75,63 +76,77 @@ struct ChoosePlaylist: View {
     }
     
     var body: some View {
-        
-        VStack(alignment: .leading){
-            HStack{
-                Spacer()
-                Text("Add song to playlist")
-                    .font(.headline)
-                    .padding(20)
-                Spacer()
-            }
-            
-            HStack{
-                Spacer()
-                AsyncImage(url: MusicPlayer.shared.albumArtUrl(listedSong: currentSong, size: 64)) { image in
-                    image.resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width:64, height: 64)
-                        .cornerRadius(10)
-                } placeholder: {
-                    Image("InAppIcon")
-                        .resizable()
-                        .frame(width: 64, height: 64)
-                }
-                Spacer()
-            }
-            
-            HStack{
-                Spacer()
-                Text(currentSong.title)
-                    .foregroundColor(Color.black)
-                Spacer()
-            }
-            
-            List {
-                
-                searchBar(searchText: $searchText)
-                
-                ForEach(sortedLists) { item in
-                    Button(action:{
-                        addToPlayList(songToAdd: currentSong.id, playlistToAddTo: item)
-                    })
-                    {
-                        //the false makes the list look pale
-                        playlistView(listedPlaylist: item, newUser: users[0], isNavigationLink: false)
-                    }
-                    
+        NavigationStack{
+            VStack(alignment: .leading){
+                HStack{
+                    Spacer()
+                    Text("Add song to playlist")
+                        .font(.headline)
+                        .padding(20)
+                    Spacer()
                 }
                 
                 HStack{
                     Spacer()
-                    Image("InAppIcon")
-                        .resizable()
-                        .frame(width: 100, height: 100)
+                    AsyncImage(url: MusicPlayer.shared.albumArtUrl(listedSong: currentSong, size: 64)) { image in
+                        image.resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width:64, height: 64)
+                            .cornerRadius(10)
+                    } placeholder: {
+                        Image("InAppIcon")
+                            .resizable()
+                            .frame(width: 64, height: 64)
+                    }
                     Spacer()
                 }
-                .listRowSeparator(.hidden)
+                
+                HStack{
+                    Spacer()
+                    Text(currentSong.title)
+                        .foregroundColor(Color.black)
+                    Spacer()
+                }
+                
+                List {
+                    
+                    searchBar(searchText: $searchText)
+                    
+                    
+                    NavigationLink(destination: createNewplayListView(currentUser: users[0])) {
+                        HStack{
+                            Image(systemName: "plus.square")
+                                .resizable()
+                                .frame(width:48, height:48)
+                                .foregroundColor(.green)
+                            Text("Create new playlist")
+                        }
+                    }
+                    
+                    
+                    ForEach(sortedLists) { item in
+                        Button(action:{
+                            addToPlayList(songToAdd: currentSong.id, playlistToAddTo: item)
+                            dismiss()
+                        })
+                        {
+                            playlistView(listedPlaylist: item, newUser: users[0], isNavigationLink: false)
+                            
+                        }
+                        
+                    }
+                    
+                    HStack{
+                        Spacer()
+                        Image("InAppIcon")
+                            .resizable()
+                            .frame(width: 100, height: 100)
+                        Spacer()
+                    }
+                    .listRowSeparator(.hidden)
+                }
+                .listStyle(.inset)
             }
-            .listStyle(.inset)
         }
     }
     
@@ -141,7 +156,16 @@ struct ChoosePlaylist: View {
     }
 
 }
+
+struct createNewplayListView: View{
     
+    var currentUser: user
+    
+    var body: some View{
+        
+        Text("hello")
+    }
+}
     
 
 #Preview {
