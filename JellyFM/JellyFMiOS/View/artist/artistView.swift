@@ -41,6 +41,7 @@ struct artistView: View {
                 .frame(width: 48, height: 48)
                 VStack(alignment: .leading, spacing: 3){
                     Text(listedArtist.name)
+                        .foregroundColor(.primary) 
                     
                     
                 }

@@ -46,14 +46,14 @@ struct MediaplayerViewFull: View {
                 Spacer()
                 VStack(alignment: .center, spacing: 3){
                     Text(musicPlayer.currentTitle ?? "")
-                        .foregroundColor(Color.black)
+                        .foregroundColor(.primary)
                         .font(.system(size: 28, weight: .bold))
                         .multilineTextAlignment(.center)
                         .frame(maxWidth: 300, alignment: .center)
                     
                     
                     Text(musicPlayer.currentArtistString)
-                        .foregroundColor(Color.black)
+                        .foregroundColor(.primary) 
                         .font(.system(size: 24))
                         .padding(.bottom, 30)
                         .multilineTextAlignment(.center)
@@ -80,7 +80,7 @@ struct MediaplayerViewFull: View {
                             Image(systemName: "backward.fill")
                                 .resizable()
                                 .frame(width: 24, height: 24)
-                                .foregroundColor(Color.black)
+                                .foregroundColor(.primary)
                         }
                         .padding()
                         Button(action: {
@@ -89,7 +89,7 @@ struct MediaplayerViewFull: View {
                             Image(systemName: musicPlayer.isPlaying ? "pause.fill" : "play.fill")
                                 .resizable()
                                 .frame(width: 24, height: 24)
-                                .foregroundColor(Color.black)
+                                .foregroundColor(.primary)
                         }
                         .padding()
                         Button(action: {
@@ -98,7 +98,7 @@ struct MediaplayerViewFull: View {
                             Image(systemName: "forward.fill")
                                 .resizable()
                                 .frame(width: 24, height: 24)
-                                .foregroundColor(Color.black)
+                                .foregroundColor(.primary)
                         }
                         .padding()
                         
@@ -110,7 +110,7 @@ struct MediaplayerViewFull: View {
                             Image(systemName: "shuffle")
                                 .resizable()
                                 .frame(width: 24, height: 24)
-                                .foregroundColor(musicPlayer.queue.isShuffled ? .green : .black)
+                                .foregroundColor(musicPlayer.queue.isShuffled ? .green : .primary)
                         }
                         .padding()
                         Button(action: {
@@ -119,7 +119,7 @@ struct MediaplayerViewFull: View {
                             Image(systemName: "repeat.1")
                                 .resizable()
                                 .frame(width: 24, height: 24)
-                                .foregroundColor(musicPlayer.isRepeatingSong ? .green : .black)
+                                .foregroundColor(musicPlayer.isRepeatingSong ? .green : .primary)
                         }
                         .padding()
                         Button(action: {
@@ -128,7 +128,7 @@ struct MediaplayerViewFull: View {
                             Image(systemName: "list.bullet")
                                 .resizable()
                                 .frame(width: 24, height: 24)
-                                .foregroundColor(.black)
+                                .foregroundColor(.primary)
                         }
                         .padding()
                     }

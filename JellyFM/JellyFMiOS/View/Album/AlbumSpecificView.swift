@@ -63,7 +63,7 @@ struct AlbumSpecificView: View {
                     
                     VStack(alignment: .center, spacing: 3){
                         Text(selectedAlbum.title)
-                            .foregroundColor(Color.black)
+                            .foregroundColor(.primary) 
                             .font(.system(size: 28, weight: .bold))
                             .padding(.top, 10)
                             .multilineTextAlignment(.center)
@@ -98,6 +98,7 @@ struct AlbumSpecificView: View {
                         }){
                             Text("Play album")
                                 .frame(width:150, height: 60)
+                                .foregroundColor(.primary)
                         }
                         .buttonStyle(PlainButtonStyle())
                         .background(playAlbumButtonCollor)
@@ -127,6 +128,7 @@ struct AlbumSpecificView: View {
                         }){
                             Text("Add to queue")
                                 .frame(width:150, height: 60)
+                                .foregroundColor(.primary)
                             
                         }
                         .buttonStyle(PlainButtonStyle())

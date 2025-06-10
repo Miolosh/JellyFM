@@ -63,16 +63,18 @@ struct SongView: View {
                 if let indexNumber = listedSong.indexNumber{
                     Text("\(indexNumber).")
                         .padding(.trailing, 10)
+                        .foregroundColor(.primary)
                     
                 }else{
                     Text("0.")
                         .padding(.trailing, 10)
+                        .foregroundColor(.primary) 
                 }
             }
             
             VStack(alignment: .leading, spacing: 3){
                 Text(listedSong.title)
-                    .foregroundColor(Color.black)
+                    .foregroundColor(.primary)
                 
                 Text(artists)
                         .font(.subheadline)
@@ -84,9 +86,7 @@ struct SongView: View {
                 Button("Add to playlist") {
                     isPlaylistSheetShown = true
                 }
-                Button("Delete") {
-                    print("Delete tapped")
-                }
+                
             } label: {
                 Image(systemName: "ellipsis.circle")
                     .resizable()

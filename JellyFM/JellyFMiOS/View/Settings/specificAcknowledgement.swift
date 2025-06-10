@@ -15,7 +15,7 @@ struct specificAcknowledgement: View {
         ScrollView{
             Text(acknowledgementText)
                 .padding()
-                .foregroundColor(.black)
+                .foregroundColor(.primary)
                 .multilineTextAlignment(.leading)
         }
     }

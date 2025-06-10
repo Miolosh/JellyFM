@@ -43,6 +43,7 @@ struct albumView: View {
                 .frame(width: 48, height: 48)
                 VStack(alignment: .leading, spacing: 3){
                     Text(listedAlbum.title)
+                        .foregroundColor(.primary) 
                     
                     
                     Text(artists)

@@ -60,7 +60,7 @@ struct playlistSpecificView: View {
                     
                     VStack(alignment: .center, spacing: 3){
                         Text(selectedPlaylist.name)
-                            .foregroundColor(Color.black)
+                            .foregroundColor(.primary)
                             .font(.system(size: 28, weight: .bold))
                             .padding(.top, 10)
                             .multilineTextAlignment(.center)
@@ -90,6 +90,7 @@ struct playlistSpecificView: View {
                         }){
                             Text("Play playlist")
                                 .frame(width:150, height: 60)
+                                .foregroundColor(.primary)
                         }
                         .buttonStyle(PlainButtonStyle())
                         .background(playAlbumButtonCollor)
@@ -119,6 +120,7 @@ struct playlistSpecificView: View {
                         }){
                             Text("Add to queue")
                                 .frame(width:150, height: 60)
+                                .foregroundColor(.primary) 
                             
                         }
                         .buttonStyle(PlainButtonStyle())

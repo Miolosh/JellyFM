@@ -15,11 +15,26 @@ struct settingsView: View {
     
     @State var streamingSpeed: Int = MusicPlayer.shared.readKbpsStream()*1000
     
+    enum ColorMode: String, CaseIterable {
+        case system = "Follow system"
+        case light = "Light"
+        case dark = "Dark"
+    }
+    
+    @AppStorage("colorMode") private var colorMode: String = "system"
+    
     var body: some View {
         NavigationView{
             VStack{
                 List{
                     Section(footer:Text("Keep in mind changing the streamingspeed will also change the quality of the audio. Changes may not take effect immediatly after changing the value.")){
+                        
+                        Picker("Select Theme", selection: $colorMode) {
+                            ForEach(ColorMode.allCases, id: \.self) { mode in
+                                Text(mode.rawValue).tag(mode.rawValue)
+                            }
+                        }
+                        
                         Picker("Streamingspeed", selection: $streamingSpeed) {
                             Text("320 Kbps").tag(320000)
                             Text("256 Kbps").tag(256000)
@@ -57,6 +72,8 @@ struct settingsView: View {
                 }
                 
             }.navigationTitle("Settings")
+            .preferredColorScheme(colorMode == "Dark" ? .dark : colorMode == "Light" ? .light : nil)
+    
         }
     }
     

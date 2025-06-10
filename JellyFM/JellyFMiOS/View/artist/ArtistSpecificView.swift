@@ -53,7 +53,7 @@ struct artistSpecificView: View {
                     
                     VStack(alignment: .center, spacing: 3){
                         Text(selectedArtist.name)
-                            .foregroundColor(Color.black)
+                            .foregroundColor(.primary) 
                             .font(.system(size: 28, weight: .bold))
                             .padding(.top, 10)
                             .multilineTextAlignment(.center)

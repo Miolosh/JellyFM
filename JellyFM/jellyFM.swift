@@ -28,9 +28,12 @@ struct My_Own_MediaplayerApp: App {
         }
     }()
 
+    @AppStorage("colorMode") private var colorMode: String = "Follow system"
+    
     var body: some Scene {
         WindowGroup {
             homePage()
+                .preferredColorScheme(colorMode == "Dark" ? .dark : colorMode == "Light" ? .light : nil)
         }
         .modelContainer(sharedModelContainer)
     }

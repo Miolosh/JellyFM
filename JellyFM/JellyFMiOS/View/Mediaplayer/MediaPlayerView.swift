@@ -49,7 +49,7 @@ struct BottomPlayerView: View{
                         Image(systemName: "backward.fill")
                             .resizable()
                             .frame(width: 24, height: 24)
-                            .foregroundColor(Color.black)
+                            .foregroundColor(.primary) 
                     }
                     .padding()
                     Button(action: {
@@ -58,7 +58,7 @@ struct BottomPlayerView: View{
                         Image(systemName: musicPlayer.isPlaying ? "pause.fill" : "play.fill")
                             .resizable()
                             .frame(width: 24, height: 24)
-                            .foregroundColor(Color.black)
+                            .foregroundColor(.primary)
                     }
                     .padding()
                     Button(action: {
@@ -67,14 +67,14 @@ struct BottomPlayerView: View{
                         Image(systemName: "forward.fill")
                             .resizable()
                             .frame(width: 24, height: 24)
-                            .foregroundColor(Color.black)
+                            .foregroundColor(.primary)
             
                     }
                     .padding()
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding()
-            } .background(Color.white)
+            } .background(Color(UIColor.systemBackground))
                 .shadow(color: Color.black.opacity(0.2), radius: 8, x:0, y: 4)
                 .onTapGesture{
                     self.isFullScreenMediaplayerActive.toggle()
