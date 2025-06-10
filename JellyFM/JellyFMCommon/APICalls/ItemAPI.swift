@@ -286,13 +286,13 @@ class ItemAPI: ObservableObject{
             }
     }
     
-    func addNewPlaylist(currentUser: user){
+    func addNewPlaylist(currentUser: user, songIds: [String] = [], songName: String = "New playlist"){
         APIShouldBeRecalled = false
         let authURL = "\(currentUser.serverIP)/Playlists"
         let codings: [String: Any] = [
-            "Ids": ["6666c4779a553b40f3488fab9d0a2170"],
+            "Ids": songIds,
             "IsPublic": false,
-            "Name": "TestPlayList",
+            "Name": songName,
             "UserId": "\(currentUser.userId)"
         ]
         print(codings)

@@ -113,7 +113,7 @@ struct ChoosePlaylist: View {
                     searchBar(searchText: $searchText)
                     
                     
-                    NavigationLink(destination: createNewplayListView(currentUser: users[0])) {
+                    NavigationLink(destination: createNewplayListView(currentSong: currentSong, currentUser: users[0])) {
                         HStack{
                             Image(systemName: "plus.square")
                                 .resizable()
@@ -147,6 +147,7 @@ struct ChoosePlaylist: View {
                 }
                 .listStyle(.inset)
             }
+            //.navigationTitle("Add song to playlist")
         }
     }
     
@@ -159,16 +160,60 @@ struct ChoosePlaylist: View {
 
 struct createNewplayListView: View{
     
+    @StateObject private var songList:ItemAPI
+    
+    
     var currentUser: user
+    var currentSong: song
+    
+    @State private var name: String = ""
+    @Environment(\.dismiss) var dismiss
+    
+    init(currentSong: song, currentUser: user) {
+        _songList = StateObject(wrappedValue: ItemAPI())
+        self.currentSong = currentSong
+        self.currentUser = currentUser
+    }
     
     var body: some View{
+            List{
+                Section(header:Text("Name your playlist")){
+                    TextField("Playlist name", text: $name)
+                }
+                
+                Section{
+                    Button(action: {
+                        createNewPlaylist()
+                        dismiss()
+                        dismiss()
+                    }) {
+                        Text("Create")
+                            .font(.headline)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.green)
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
+                    }
+                }
+                .listRowBackground(Color(UIColor.systemGroupedBackground))
+                
+            }
+            .navigationTitle("Create playlist")
+            .navigationBarTitleDisplayMode(.inline)
         
-        Text("hello")
+            .listStyle(.automatic)
+        
+    }
+    
+    func createNewPlaylist(){
+        songList.addNewPlaylist(currentUser: currentUser,  songIds: [currentSong.id], songName: name)
     }
 }
     
 
 #Preview {
-    SongListView()
-        .modelContainer(for: song.self, inMemory: true)
+    var currentUser: user = user(loggingInUsername: "noUser", LoggingInToServer: "0.0.0.0", currentDeviceID: "NoDeviceId", currentDeviceType: "noType", currentClientVersion: "0", token: "0", currentUserId: "")
+    
+    createNewplayListView(currentSong: song(id: "String", title: "Levensloop", artist: ["Toon"], albumid: "300", dateCreated: Date.now , discNumber: 1, premiereDate: Date.now), currentUser: currentUser)
 }

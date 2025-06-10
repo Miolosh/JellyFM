@@ -130,15 +130,7 @@ struct playlistListView: View {
                             Label("Sort", systemImage: "arrow.up.arrow.down")
                         }
                     }
-                    ToolbarItem() {
-                        Button{
-                            createNewPlaylist()
-                        } label: {
-                            Label("Sort", systemImage: "plus")
-                                .font(.system(size: 30))
-                                .imageScale(.large)
-                        }
-                    }
+                    
                         
                 }
                     
